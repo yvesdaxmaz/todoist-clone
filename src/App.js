@@ -1,10 +1,11 @@
+import Layout from './containers/Layout';
 function App() {
   return (
-    <div className="App">
+    <Layout>
       <header className="App-header">
         <h2 className="text-sm text-purple-600">Todoist application</h2>
       </header>
-    </div>
+    </Layout>
   );
 }
 
