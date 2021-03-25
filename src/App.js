@@ -1,10 +1,9 @@
 import Layout from './containers/Layout';
+import Header from './components/Header/Header';
 function App() {
   return (
     <Layout>
-      <header className="App-header">
-        <h2 className="text-sm text-purple-600">Todoist application</h2>
-      </header>
+      <Header />
     </Layout>
   );
 }
