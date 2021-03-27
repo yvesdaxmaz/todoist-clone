@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { BsQuestionCircle, BsSearch, BsTimes } from 'react-icons/bs';
+import { BsQuestionCircle, BsSearch, BsTimes, BsInbox } from 'react-icons/bs';
 import { TiTimes } from 'react-icons/ti';
+import { CgCalendarDates } from 'react-icons/cg';
 import Button from './../Button/Button';
 
 const SearchBar = props => {
@@ -11,15 +12,19 @@ const SearchBar = props => {
   return (
     <div
       className={
-        'relative flex group' +
-        (focused ? ' bg-white' : ' hover:bg-white bg-red-100 bg-opacity-25') +
+        'relative flex' +
+        (focused || hovered
+          ? ' bg-white'
+          : ' hover:bg-white bg-red-100 bg-opacity-25') +
         ' items-center px-2 py-1 space-x-2 rounded'
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <BsSearch
-        className={focused ? 'text-gray-600' : 'group-hover:text-gray-600'}
+        className={
+          focused || hovered ? 'text-gray-600' : 'group-hover:text-gray-600'
+        }
       />
       <input
         id=""
@@ -29,8 +34,11 @@ const SearchBar = props => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         className={
-          (focused ? 'w-64 placeholder-gray-600' : 'w-32') +
-          ' bg-transparent placeholder-white group-hover:placeholder-gray-600 text-white outline-none group-hover:text-gray-600 text-sm flex-grow'
+          (focused ? 'w-96 text-gray-600 ' : 'w-32') +
+          (hovered || focused
+            ? ' placeholder-gray-600'
+            : ' placeholder-white') +
+          ' bg-transparent outline-none text-sm flex-grow'
         }
       />
       {focused ? (
@@ -77,7 +85,7 @@ const SearchBar = props => {
           <div
             className={
               (findHovered ? 'block' : 'hidden') +
-              ' absolute whitespace-nowrap w-auto transform translate-y-full z-10'
+              ' absolute whitespace-nowrap w-auto left-0 mt-2 z-10'
             }
           >
             <div className="flex h-8 space-x-2 items-center bg-gray-800 p-2 rounded">
@@ -89,6 +97,33 @@ const SearchBar = props => {
           </div>
         </div>
       )}
+      {focused ? (
+        <div className="absolute mt-8 rounded top-0 left-0 w-full max-w-64 bg-white shadow text-gray-900">
+          <div className="">
+            <h4 className="text-sm text-gray-900 font-bold p-2">
+              Recently view
+            </h4>
+            <div className="text-xs p-2  hover:bg-gray-100">
+              <div className="flex items-center space-x-2">
+                <CgCalendarDates className="text-purple-600" size="2em" />
+                <span className="text-gray-600 text-sm">Upcoming</span>
+              </div>
+            </div>
+            <div className="text-xs p-2 hover:bg-gray-100">
+              <div className="flex items-center space-x-2">
+                <BsInbox className="text-blue-600" size="2em" />
+                <span className="text-gray-600 text-sm">Inbox</span>
+              </div>
+            </div>
+            <div className="text-xs p-2  hover:bg-gray-100">
+              <div className="flex items-center space-x-2">
+                <CgCalendarDates className="text-green-600" size="2em" />
+                <span className="text-gray-600 text-sm">Inbox</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
