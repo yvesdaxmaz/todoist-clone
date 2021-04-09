@@ -1,0 +1,26 @@
+import React from 'react';
+
+const NavItem = ({ title, counter, children, isActive }) => {
+  return (
+    <div
+      className={
+        'flex p-2 space-x-4 items-center text-sm rounded ' +
+        (isActive ? 'bg-gray-300' : 'hover:bg-gray-200')
+      }
+    >
+      {children}
+      <span className="flex-grow text-gray-800">{title}</span>
+      {counter ?? (
+        <span
+          className={
+            (isActive ? 'text-red-500 ' : 'text-gray-300 ') + ' text-sm'
+          }
+        >
+          {counter}
+        </span>
+      )}
+    </div>
+  );
+};
+
+export default NavItem;

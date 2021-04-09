@@ -1,14 +1,15 @@
 import React from 'react';
 import { MdDehaze } from 'react-icons/md';
 
-const Button = ({ children, small, optinText, shortcutKey }) => {
+const Button = ({ children, small, optinText, shortcutKey, bg, bgOpacity }) => {
   return (
     <button>
       <div
         className={
-          'group relative flex items-center justify-center' +
+          'group relative flex items-center justify-center rounded' +
           (small ? ' h-5 w-5' : ' p-1 h-7 w-7') +
-          ' hover:bg-red-100 hover:bg-opacity-25 rounded'
+          (bg ? ` hover:bg-${bg}-${bgOpacity}` : ' hover:bg-red-100') +
+          ' hover:bg-opacity-25'
         }
       >
         <>{children}</>
