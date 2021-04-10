@@ -40,6 +40,13 @@ const Nav = props => {
         </NavToggleItem>
       </NavSection>
 
+      <NavSection
+        title="Labels"
+        add={e => {
+          e.preventDefault();
+          console.log('add projects');
+        }}
+      ></NavSection>
       <NavSection title="Filters">
         <NavItem title="Assigned to me" optionable>
           <GiWaterDrop className="text-gray-600" size="1.5em" />

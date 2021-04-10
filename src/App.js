@@ -15,8 +15,7 @@ function App() {
             </div>
           </div>
         </div>
-
-        <Modal />
+        {/*<Modal /> */}
       </div>
     </Layout>
   );

@@ -5,9 +5,16 @@ const ColorSelector = props => {
   const [selectedColor, setSelectedColor] = useState('bg-gray-300');
   const [dropped, setDropped] = useState(false);
   const colors = {
-    'bg-gray-600': 'charcolor',
-    'bg-gray-300': 'grey',
-    'bg-red-600': 'red',
+    'bg-gray-600': 'Charcolor',
+    'bg-gray-300': 'Grey',
+    'bg-red-600': 'Red',
+    'bg-yellow-500': 'Yellow',
+    'bg-red-300': 'Salmon',
+    'bg-green-500': 'Green',
+    'bg-purple-700': 'Grape',
+    'bg-purple-500': 'Violet',
+    'bg-blue-600': 'Sky Blue',
+    'bg-blue-300': 'Light Blue',
   };
 
   const handleChangeColor = color => {

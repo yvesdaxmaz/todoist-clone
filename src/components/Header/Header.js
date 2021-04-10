@@ -58,7 +58,6 @@ const Header = props => {
           </div>
         </div>
       </div>
-      <h2 className="text-sm text-purple-600">Todoist application</h2>
     </header>
   );
 };
