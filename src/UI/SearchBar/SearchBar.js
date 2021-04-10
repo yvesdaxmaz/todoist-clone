@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { BsQuestionCircle, BsSearch, BsTimes, BsInbox } from 'react-icons/bs';
+import { BsQuestionCircle, BsSearch, BsInbox } from 'react-icons/bs';
 import { TiTimes } from 'react-icons/ti';
 import { CgCalendarDates } from 'react-icons/cg';
-import Button from './../Button/Button';
 
 const SearchBar = props => {
   const [focused, setFocused] = useState(false);

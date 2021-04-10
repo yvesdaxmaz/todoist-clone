@@ -3,3 +3,29 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.navsection_children-enter {
+  height: 0;
+}
+
+.navsection_children-enter-active {
+  height: auto;
+  transition: height 2000ms;
+}
+
+.navsection_children-enter-done {
+  height: auto;
+}
+
+.navsection_children-exit {
+  height: 1;
+}
+
+.navsection_children-exit-active {
+  height: 0;
+  transition: height 2000ms;
+}
+
+.navsection_children-exit-done {
+  height: 0;
+}

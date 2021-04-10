@@ -1,6 +1,7 @@
 import Layout from './containers/Layout';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
+import Modal from './components/Modal/Modal';
 function App() {
   return (
     <Layout>
@@ -14,6 +15,8 @@ function App() {
             </div>
           </div>
         </div>
+
+        <Modal />
       </div>
     </Layout>
   );
