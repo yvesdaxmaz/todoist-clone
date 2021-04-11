@@ -1,8 +1,12 @@
+import React, { useEffect, useContext } from 'react';
 import Layout from './containers/Layout';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
 import Modal from './components/Modal/Modal';
+import { useStateValue } from './StateProvider';
+
 function App() {
+  const [state, dispatch] = useStateValue();
   return (
     <Layout>
       <div className="h-screen flex flex-col">
@@ -10,12 +14,14 @@ function App() {
         <div className="relative flex-grow">
           <div className="flex relative">
             <Sidebar />
-            <div className="ml-auto w-4/5 bg-green-600">
-              <div className="mx-auto w-3/5 bg-gray-600">Content</div>
+            <div className="w-full md:w-4/5 md:ml-auto bg-green-600">
+              <div className="w-full md:ml-auto md:w-4/5 md:pl-4 bg-gray-600">
+                Content
+              </div>
             </div>
           </div>
         </div>
-        {/*<Modal /> */}
+        {state.addProject ? <Modal /> : null}
       </div>
     </Layout>
   );

@@ -3,10 +3,49 @@ import ReactDOM from 'react-dom';
 import './styles/tailwind.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { StateProvider } from './StateProvider';
+import reducer from './reducer';
+
+let initialState = {
+  addProject: false,
+  labels: [
+    { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
+    { id: 2, name: 'urgent', bg: 'text-blue-300', counter: 2 },
+    { id: 3, name: 'important', bg: 'text-red-500', counter: 2 },
+  ],
+  projects: [
+    {
+      id: 1,
+      name: 'Welcome 👋',
+      color: 'bg-gray-300',
+      favorited: false,
+      view: 'list',
+      archived: false,
+    },
+    {
+      id: 2,
+      name: 'Learning',
+      color: 'bg-blue-300',
+      favorited: false,
+      view: 'list',
+      archived: false,
+    },
+    {
+      id: 2,
+      name: 'Machine learning',
+      color: 'bg-purple-500',
+      favorited: false,
+      view: 'list',
+      archived: true,
+    },
+  ],
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StateProvider reducer={reducer} initialState={initialState}>
+      <App />
+    </StateProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

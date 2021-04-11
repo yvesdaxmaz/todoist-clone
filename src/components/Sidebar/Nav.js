@@ -1,11 +1,25 @@
 import React from 'react';
 import { BsInbox, BsCalendar } from 'react-icons/bs';
 import { GiWaterDrop } from 'react-icons/gi';
+import { IoMdPricetag } from 'react-icons/io';
 import NavItem from './NavItem';
 import NavSection from './NavSection';
 import NavToggleItem from './NavToggleItem';
+import { useStateValue } from './../../StateProvider';
+import { SHOW_ADD_PROJECT_MODAL } from './../../actionTypes';
 
 const Nav = props => {
+  const [{ addProject, labels, projects }, dispatch] = useStateValue();
+
+  const handleAddProject = () => {
+    dispatch({
+      type: SHOW_ADD_PROJECT_MODAL,
+    });
+  };
+
+  let archivedProjects = projects.filter(project => project.archived);
+  let nonArchivedProjects = projects.filter(project => !project.archived);
+
   return (
     <nav>
       <NavItem title="Inbox" counter={3}>
@@ -22,21 +36,27 @@ const Nav = props => {
         title="Projects"
         add={e => {
           e.preventDefault();
+
+          handleAddProject();
           console.log('add projects');
         }}
       >
-        <NavItem title="Welcome  👋" optionable draggable>
-          <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-        </NavItem>
-
-        <NavItem title="Learning" optionable draggable>
-          <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-        </NavItem>
+        {nonArchivedProjects.map(({ id, name, color }) => {
+          return (
+            <NavItem title={name} key={id} optionable draggable>
+              <div className={`h-2 w-2 rounded-full ${color}`}></div>
+            </NavItem>
+          );
+        })}
 
         <NavToggleItem offTitle="Archived projects" onTitle="Hide Archived">
-          <NavItem title="Learning" optionable>
-            <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-          </NavItem>
+          {archivedProjects.map(({ id, name, color }) => {
+            return (
+              <NavItem title={name} key={id} optionable>
+                <div className={`h-2 w-2 rounded-full ${color}`}></div>
+              </NavItem>
+            );
+          })}
         </NavToggleItem>
       </NavSection>
 
@@ -46,7 +66,15 @@ const Nav = props => {
           e.preventDefault();
           console.log('add projects');
         }}
-      ></NavSection>
+      >
+        {labels.map(({ id, name, counter, bg }) => {
+          return (
+            <NavItem title={name} key={id} tighten counter={counter}>
+              <IoMdPricetag size="1.5em" className={bg} />
+            </NavItem>
+          );
+        })}
+      </NavSection>
       <NavSection title="Filters">
         <NavItem title="Assigned to me" optionable>
           <GiWaterDrop className="text-gray-600" size="1.5em" />

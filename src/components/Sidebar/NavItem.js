@@ -8,6 +8,7 @@ const NavItem = ({
   isActive,
   draggable,
   optionable,
+  tighten,
 }) => {
   const [hovered, setHovered] = useState(false);
   return (
@@ -20,7 +21,9 @@ const NavItem = ({
       onMouseLeave={() => setHovered(false)}
     >
       {children}
-      <span className="flex-grow text-gray-800">{title}</span>
+      <span className={(tighten ? '' : 'flex-grow') + ' text-gray-800'}>
+        {title}
+      </span>
       {!optionable && hovered ? (
         <span
           className={
