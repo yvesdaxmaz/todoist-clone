@@ -8,11 +8,18 @@ import {
   BsTrash,
   BsEnvelope,
 } from 'react-icons/bs';
-import { RiEdit2Fill } from 'react-icons/ri';
+import { RiEdit2Fill, RiInboxUnarchiveLine } from 'react-icons/ri';
 import { BiUserPlus, BiDuplicate } from 'react-icons/bi';
 import { MdFormatListBulleted } from 'react-icons/md';
+import { useStateValue } from './../../StateProvider';
+import {
+  ARCHIVE_PROJECT,
+  DELETE_PROJECT,
+  DUPLICATE_PROJECT,
+} from './../../actionTypes';
 
-const NavItemOption = ({ enableld, hide, project, archived }) => {
+const NavItemOption = ({ enableld, hide, archived, id }) => {
+  const [state, dispatch] = useStateValue();
   const wrapperRef = useRef(null);
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -26,7 +33,24 @@ const NavItemOption = ({ enableld, hide, project, archived }) => {
       window.removeEventListener('mousedown', () => {});
     };
   });
+  const handleDuplicateProject = () => {
+    dispatch({ type: DUPLICATE_PROJECT, id });
+    hide();
+  };
 
+  const handleArchiveProject = () => {
+    dispatch({
+      type: ARCHIVE_PROJECT,
+      id,
+    });
+  };
+
+  const handleDeleteProject = () => {
+    dispatch({
+      type: DELETE_PROJECT,
+      id,
+    });
+  };
   return (
     <div
       className="absolute top-0 left-0 transform translate-x-1/2 mt-4 z-20 bg-white"
@@ -83,7 +107,10 @@ const NavItemOption = ({ enableld, hide, project, archived }) => {
               </div>
             </div>
             <div className="py-1 border-b border-gray-200">
-              <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full">
+              <div
+                className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full"
+                onClick={handleDuplicateProject}
+              >
                 <span className="relative flex items-center justify-center h-8 w-8 text-gray-400">
                   <BiDuplicate size="1.5em" />
                 </span>
@@ -112,15 +139,25 @@ const NavItemOption = ({ enableld, hide, project, archived }) => {
         ) : null}
 
         <div className="py-1 border-b border-gray-200">
-          <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full">
+          <div
+            className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full"
+            onClick={handleArchiveProject}
+          >
             <span className="relative flex items-center justify-center h-8 w-8 text-gray-400">
-              <BsArchive size="1.5em" />
+              {!archived ? (
+                <BsArchive size="1.5em" />
+              ) : (
+                <RiInboxUnarchiveLine />
+              )}
             </span>
             <span className="flex text-xs text-gray-600 py-2">
-              Archive project
+              {!archived ? 'Archive project' : 'Unarchive'}
             </span>
           </div>
-          <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400">
+          <div
+            className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400"
+            onClick={handleDeleteProject}
+          >
             <span className="relative flex items-center justify-center h-8 w-8">
               <BsTrash size="1.5em" />
             </span>

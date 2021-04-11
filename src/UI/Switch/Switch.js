@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-const Switch = ({ label }) => {
+const Switch = ({ label, change }) => {
   const [activated, setActivated] = useState(false);
 
   const handleClick = () => {
     setActivated(!activated);
+    change(activated);
   };
   return (
     <div className="w-full text-sm h-8" onClick={handleClick}>

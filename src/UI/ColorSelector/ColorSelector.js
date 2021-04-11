@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 
-const ColorSelector = props => {
+const ColorSelector = ({ change }) => {
   const [selectedColor, setSelectedColor] = useState('bg-gray-300');
   const [dropped, setDropped] = useState(false);
   const colors = {
@@ -19,6 +19,7 @@ const ColorSelector = props => {
 
   const handleChangeColor = color => {
     setSelectedColor(color);
+    change(color);
     setDropped(false);
   };
 
@@ -49,6 +50,7 @@ const ColorSelector = props => {
                     : 'hover:bg-gray-100') +
                   ' flex items-center space-x-4 h-full px-4 py-1'
                 }
+                key={colorName}
                 onClick={() => handleChangeColor(colorName)}
               >
                 <div className={'h-3 w-3 rounded-full ' + colorName}></div>

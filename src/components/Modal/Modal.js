@@ -1,14 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BsQuestionCircle } from 'react-icons/bs';
 import Button from './../../UI/Button/Button';
 import ColorSelector from './../../UI/ColorSelector/ColorSelector';
 import Switch from './../../UI/Switch/Switch';
 import ViewLayoutSelector from './../../UI/ViewLayoutSelector/ViewLayoutSelector';
 import { useStateValue } from './../../StateProvider';
-import { HIDE_ADD_PROJECT_MODAL } from './../../actionTypes';
+import { HIDE_ADD_PROJECT_MODAL, ADD_PROJECT } from './../../actionTypes';
 
 const Modal = props => {
+  const [name, setName] = useState('');
+  const [color, setColor] = useState('bg-gray-300');
+  const [favorited, setFavorited] = useState(false);
+  const [view, setView] = useState('list');
+
   const [state, dispatch] = useStateValue();
+
   const wrapperRef = useRef(null);
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -23,7 +29,38 @@ const Modal = props => {
     });
   };
 
-  const handleAddProject = () => {};
+  const handleAddProject = () => {
+    if (name === '') {
+      return;
+    }
+    dispatch({
+      type: ADD_PROJECT,
+      project: {
+        name,
+        color,
+        favorited,
+        view,
+        archived: false,
+      },
+    });
+    dispatch({
+      type: HIDE_ADD_PROJECT_MODAL,
+    });
+  };
+
+  const handleNameChange = event => {
+    setName(event.target.value);
+  };
+  const handleChangeColor = color => {
+    setColor(color);
+  };
+  const handleChangeView = view => {
+    setView(view);
+  };
+
+  const handleChangeFavorited = favorited => {
+    setFavorited(favorited);
+  };
 
   useEffect(() => {
     window.addEventListener('mousedown', handleMouseDown);
@@ -60,16 +97,21 @@ const Modal = props => {
                     <input
                       type="text"
                       className="w-full border border-gray-100 focus:border-gray-300 text-sm rounded p-1 outline-none h-8"
+                      value={name}
+                      onChange={handleNameChange}
                     />
                   </div>
                   <div className="w-full mb-4">
                     <h3 className="text-sm text-gray-800 font-bold mb-2">
                       Color
                     </h3>
-                    <ColorSelector />
+                    <ColorSelector change={handleChangeColor} />
                   </div>
                   <div>
-                    <Switch label="Add to favorites" />
+                    <Switch
+                      label="Add to favorites"
+                      change={handleChangeFavorited}
+                    />
                   </div>
 
                   <div className="w-full mb-4">
@@ -93,7 +135,15 @@ const Modal = props => {
                 >
                   Cancel
                 </button>
-                <button className="text-xs font-bold text-white bg-red-600 border border-transparent rounded py-2 px-4">
+                <button
+                  className={
+                    (name === ''
+                      ? 'bg-red-300 bg-opacity-75 '
+                      : 'bg-red-600 ') +
+                    'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
+                  }
+                  onClick={handleAddProject}
+                >
                   Add
                 </button>
               </div>

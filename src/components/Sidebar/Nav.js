@@ -49,6 +49,7 @@ const Nav = props => {
               optionable
               draggable
               archived={archived}
+              id={id}
             >
               <div className={`h-2 w-2 rounded-full ${color}`}></div>
             </NavItem>
@@ -58,7 +59,13 @@ const Nav = props => {
         <NavToggleItem offTitle="Archived projects" onTitle="Hide Archived">
           {archivedProjects.map(({ id, name, color, archived }) => {
             return (
-              <NavItem title={name} key={id} optionable archived={archived}>
+              <NavItem
+                title={name}
+                key={id}
+                optionable
+                archived={archived}
+                id={id}
+              >
                 <div
                   className={`h-2 w-2 rounded-full ${color}`}
                   archived={archived}

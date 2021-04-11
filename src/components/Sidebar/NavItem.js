@@ -12,6 +12,7 @@ const NavItem = ({
   optionable,
   tighten,
   archived,
+  id,
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -66,6 +67,7 @@ const NavItem = ({
       ) : null}
       {showMenu ? (
         <NavItemOption
+          id={id}
           enable={showMenu}
           hide={() => setShowMenu(false)}
           archived={archived}
