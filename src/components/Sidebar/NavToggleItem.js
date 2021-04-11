@@ -7,9 +7,9 @@ const NavToggleItem = ({ onTitle, offTitle, children }) => {
     setToggle(!toggle);
   };
   return (
-    <div className="p-2" onClick={handleClick}>
+    <div className="p-2">
       <div className="flex-grow text-gray-800 pl-6">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600" onClick={handleClick}>
           {toggle ? onTitle : offTitle}
         </span>
       </div>

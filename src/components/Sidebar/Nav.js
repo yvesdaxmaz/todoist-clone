@@ -41,19 +41,28 @@ const Nav = props => {
           console.log('add projects');
         }}
       >
-        {nonArchivedProjects.map(({ id, name, color }) => {
+        {nonArchivedProjects.map(({ id, name, color, archived }) => {
           return (
-            <NavItem title={name} key={id} optionable draggable>
+            <NavItem
+              title={name}
+              key={id}
+              optionable
+              draggable
+              archived={archived}
+            >
               <div className={`h-2 w-2 rounded-full ${color}`}></div>
             </NavItem>
           );
         })}
 
         <NavToggleItem offTitle="Archived projects" onTitle="Hide Archived">
-          {archivedProjects.map(({ id, name, color }) => {
+          {archivedProjects.map(({ id, name, color, archived }) => {
             return (
-              <NavItem title={name} key={id} optionable>
-                <div className={`h-2 w-2 rounded-full ${color}`}></div>
+              <NavItem title={name} key={id} optionable archived={archived}>
+                <div
+                  className={`h-2 w-2 rounded-full ${color}`}
+                  archived={archived}
+                ></div>
               </NavItem>
             );
           })}
@@ -67,7 +76,7 @@ const Nav = props => {
           console.log('add projects');
         }}
       >
-        {labels.map(({ id, name, counter, bg }) => {
+        {labels.map(({ id, name, counter, bg, archived }) => {
           return (
             <NavItem title={name} key={id} tighten counter={counter}>
               <IoMdPricetag size="1.5em" className={bg} />
