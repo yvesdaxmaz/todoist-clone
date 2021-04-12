@@ -2,11 +2,15 @@ import {
   SHOW_ADD_PROJECT_MODAL,
   HIDE_ADD_PROJECT_MODAL,
   ARCHIVE_PROJECT,
+  UNARCHIVE_PROJECT,
   DELETE_PROJECT,
   DUPLICATE_PROJECT,
   ADD_PROJECT,
   FAVORITED_PROJECT,
   UNFAVORITED_PROJECT,
+  SHOW_EDIT_PROJECT_MODAL,
+  SAVE_EDIT_PROJECT,
+  HIDE_EDIT_PROJECT_MODAL,
 } from './actionTypes';
 const reducer = (state, action) => {
   let { projects } = state;
@@ -25,6 +29,15 @@ const reducer = (state, action) => {
         return project;
       });
       return { ...state, projects };
+    case UNARCHIVE_PROJECT:
+      projects = projects.map(project => {
+        if (project.id === action.id) {
+          return { ...project, archived: false };
+        }
+        return project;
+      });
+      return { ...state, projects };
+
     case DELETE_PROJECT:
       return {
         ...state,
@@ -62,6 +75,22 @@ const reducer = (state, action) => {
         return project;
       });
       return { ...state, projects };
+    case SHOW_EDIT_PROJECT_MODAL:
+      project = projects.find(
+        currentProject => currentProject.id === action.id,
+      );
+      return { ...state, editProject: true, selectedProject: project };
+    case HIDE_EDIT_PROJECT_MODAL:
+      return { ...state, editProject: false, selectedProject: null };
+
+    case SAVE_EDIT_PROJECT:
+      projects = projects.map(project => {
+        if (project.id === action.id) {
+          return { id: action.id, ...action.project };
+        }
+        return project;
+      });
+      return { ...state, projects, editProject: false };
     default:
       return state;
   }

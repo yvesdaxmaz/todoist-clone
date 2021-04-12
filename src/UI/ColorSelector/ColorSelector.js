@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsCheck } from 'react-icons/bs';
 
-const ColorSelector = ({ change }) => {
+const ColorSelector = ({ change, selected }) => {
   const [selectedColor, setSelectedColor] = useState('bg-gray-300');
   const [dropped, setDropped] = useState(false);
   const colors = {
@@ -27,6 +27,12 @@ const ColorSelector = ({ change }) => {
     event.preventDefault();
     setDropped(!dropped);
   };
+
+  useEffect(() => {
+    if (selected !== null) {
+      setSelectedColor(selected);
+    }
+  });
 
   return (
     <div className="relative">

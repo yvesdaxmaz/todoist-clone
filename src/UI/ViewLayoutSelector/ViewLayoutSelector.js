@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsCheck } from 'react-icons/bs';
 
-const ViewLayoutSelector = props => {
+const ViewLayoutSelector = ({ change, selected }) => {
   const [layout, setLayout] = useState('list');
 
   const handleChangeLayout = selectedLayout => {
     setLayout(selectedLayout);
+    change(selectedLayout);
   };
+
   return (
     <div>
       <div className="flex space-x-4">

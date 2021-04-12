@@ -14,10 +14,12 @@ import { MdFormatListBulleted } from 'react-icons/md';
 import { useStateValue } from './../../StateProvider';
 import {
   ARCHIVE_PROJECT,
+  UNARCHIVE_PROJECT,
   DELETE_PROJECT,
   DUPLICATE_PROJECT,
   FAVORITED_PROJECT,
   UNFAVORITED_PROJECT,
+  SHOW_EDIT_PROJECT_MODAL,
 } from './../../actionTypes';
 
 const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
@@ -46,6 +48,12 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       id,
     });
   };
+  const handleUnarchiveProject = () => {
+    dispatch({
+      type: UNARCHIVE_PROJECT,
+      id,
+    });
+  };
 
   const handleDeleteProject = () => {
     dispatch({
@@ -68,6 +76,13 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       id,
     });
   };
+
+  const handleShowEditProject = () => {
+    dispatch({
+      type: SHOW_EDIT_PROJECT_MODAL,
+      id,
+    });
+  };
   return (
     <div
       className="absolute top-0 left-0 transform translate-x-1/2 mt-4 z-20 bg-white"
@@ -77,7 +92,10 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       {favorited ? (
         <div className="shadow border border-gray-200 rounded">
           <div className="py-1 border-b border-gray-200">
-            <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full">
+            <div
+              className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full"
+              onClick={handleShowEditProject}
+            >
               <span className="relative flex items-center justify-center h-8 w-8 text-gray-400">
                 <RiEdit2Fill size="1.5em" />
               </span>
@@ -123,7 +141,10 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
                 </div>
               </div>
               <div className="py-1 border-b border-gray-200">
-                <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full">
+                <div
+                  className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full"
+                  onClick={handleShowEditProject}
+                >
                   <span className="relative flex items-center justify-center h-8 w-8 text-gray-400">
                     <RiEdit2Fill size="1.5em" />
                   </span>
@@ -186,7 +207,11 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
           <div className="py-1 border-b border-gray-200">
             <div
               className="flex items-center space-x-4 h-8  hover:bg-gray-100 w-full"
-              onClick={handleArchiveProject}
+              onClick={
+                archived === false
+                  ? handleArchiveProject
+                  : handleUnarchiveProject
+              }
             >
               <span className="relative flex items-center justify-center h-8 w-8 text-gray-400">
                 {!archived ? (

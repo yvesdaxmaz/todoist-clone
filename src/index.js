@@ -8,6 +8,7 @@ import reducer from './reducer';
 
 let initialState = {
   addProject: false,
+  editProject: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
     { id: 2, name: 'urgent', bg: 'text-blue-300', counter: 2 },
@@ -21,6 +22,7 @@ let initialState = {
       favorited: false,
       view: 'list',
       archived: false,
+      favorited: false,
     },
     {
       id: 2,
@@ -29,14 +31,16 @@ let initialState = {
       favorited: false,
       view: 'list',
       archived: false,
+      favorited: false,
     },
     {
-      id: 2,
+      id: 3,
       name: 'Machine learning',
       color: 'bg-purple-500',
       favorited: false,
       view: 'list',
       archived: true,
+      favorited: false,
     },
   ],
 };

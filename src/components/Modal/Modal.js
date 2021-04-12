@@ -5,15 +5,20 @@ import ColorSelector from './../../UI/ColorSelector/ColorSelector';
 import Switch from './../../UI/Switch/Switch';
 import ViewLayoutSelector from './../../UI/ViewLayoutSelector/ViewLayoutSelector';
 import { useStateValue } from './../../StateProvider';
-import { HIDE_ADD_PROJECT_MODAL, ADD_PROJECT } from './../../actionTypes';
+import {
+  HIDE_ADD_PROJECT_MODAL,
+  HIDE_EDIT_PROJECT_MODAL,
+  ADD_PROJECT,
+  SAVE_EDIT_PROJECT,
+} from './../../actionTypes';
 
-const Modal = props => {
+const Modal = ({ edit }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState('bg-gray-300');
   const [favorited, setFavorited] = useState(false);
   const [view, setView] = useState('list');
 
-  const [state, dispatch] = useStateValue();
+  const [{ selectedProject }, dispatch] = useStateValue();
 
   const wrapperRef = useRef(null);
   const handleMouseDown = event => {
@@ -23,7 +28,26 @@ const Modal = props => {
       });
     }
   };
-  const handleCancel = () => {
+  const handleCancelEdit = () => {
+    dispatch({
+      type: HIDE_EDIT_PROJECT_MODAL,
+    });
+  };
+
+  const handleSaveEditedProject = () => {
+    dispatch({
+      type: SAVE_EDIT_PROJECT,
+      project: {
+        ...selectedProject,
+        name,
+        color,
+        favorited,
+        view,
+      },
+    });
+  };
+
+  const handleCancelAdd = () => {
     dispatch({
       type: HIDE_ADD_PROJECT_MODAL,
     });
@@ -69,6 +93,15 @@ const Modal = props => {
     };
   });
 
+  useEffect(() => {
+    // if (edit) {
+    //   setName(selectedProject.name);
+    //   setColor(selectedProject.color);
+    //   setFavorited(selectedProject.favorited);
+    //   setView(selectedProject.view);
+    // }
+  });
+
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50">
       <div className="w-full h-screen flex items-center justify-center">
@@ -78,7 +111,7 @@ const Modal = props => {
               <div className="border-b border-gray-200 bg-gray-100 px-8 py-2 rounded-t-lg">
                 <div className="flex items-center justify-between">
                   <h2 className="text-gray-800 font-bold text-md">
-                    Add project
+                    {!edit ? 'Add project' : 'Edit project'}
                   </h2>
                   <Button
                     optinText="Click to find out about projects and how to use them."
@@ -105,12 +138,16 @@ const Modal = props => {
                     <h3 className="text-sm text-gray-800 font-bold mb-2">
                       Color
                     </h3>
-                    <ColorSelector change={handleChangeColor} />
+                    <ColorSelector
+                      change={handleChangeColor}
+                      selected={color}
+                    />
                   </div>
                   <div>
                     <Switch
                       label="Add to favorites"
                       change={handleChangeFavorited}
+                      enabled={favorited}
                     />
                   </div>
 
@@ -118,7 +155,10 @@ const Modal = props => {
                     <h3 className="text-sm text-gray-800 font-bold mb-2">
                       View
                     </h3>
-                    <ViewLayoutSelector />
+                    <ViewLayoutSelector
+                      change={handleChangeView}
+                      selected={view}
+                    />
                   </div>
                   <div className="w-full mb-4">
                     <p className="text-sm text-gray-300">
@@ -129,23 +169,48 @@ const Modal = props => {
                 </div>
               </div>
               <div className="flex justify-end space-x-2 px-8 py-2 bg-white border-t border-gray-100 rounded-b-lg">
-                <button
-                  className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-                <button
-                  className={
-                    (name === ''
-                      ? 'bg-red-300 bg-opacity-75 '
-                      : 'bg-red-600 ') +
-                    'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
-                  }
-                  onClick={handleAddProject}
-                >
-                  Add
-                </button>
+                {edit ? (
+                  <>
+                    <button
+                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"
+                      onClick={handleCancelEdit}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      className={
+                        (name === ''
+                          ? 'bg-red-300 bg-opacity-75 '
+                          : 'bg-red-600 ') +
+                        'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
+                      }
+                      onClick={handleSaveEditedProject}
+                    >
+                      Save
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"
+                      onClick={handleCancelAdd}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className={
+                        (name === ''
+                          ? 'bg-red-300 bg-opacity-75 '
+                          : 'bg-red-600 ') +
+                        'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
+                      }
+                      onClick={handleAddProject}
+                    >
+                      Add
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Switch = ({ label, change }) => {
+const Switch = ({ label, change, enabled }) => {
   const [activated, setActivated] = useState(false);
 
   const handleClick = () => {
     setActivated(!activated);
-    change(activated);
+    change(!activated);
   };
+
+  useEffect(() => {
+    if (enabled) {
+      setActivated(enabled);
+    }
+  });
   return (
     <div className="w-full text-sm h-8" onClick={handleClick}>
       <div className="flex items-center space-x-4 h-full">

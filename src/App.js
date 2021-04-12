@@ -22,6 +22,7 @@ function App() {
           </div>
         </div>
         {state.addProject ? <Modal /> : null}
+        {state.editProject ? <Modal edit /> : null}
       </div>
     </Layout>
   );
