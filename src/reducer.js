@@ -5,6 +5,8 @@ import {
   DELETE_PROJECT,
   DUPLICATE_PROJECT,
   ADD_PROJECT,
+  FAVORITED_PROJECT,
+  UNFAVORITED_PROJECT,
 } from './actionTypes';
 const reducer = (state, action) => {
   let { projects } = state;
@@ -43,6 +45,23 @@ const reducer = (state, action) => {
       last_project = projects[projects.length - 1];
       project = { ...action.project, id: last_project.id + 1 };
       return { ...state, projects: [...projects, project] };
+
+    case FAVORITED_PROJECT:
+      projects = projects.map(project => {
+        if (project.id === action.id) {
+          return { ...project, favorited: true };
+        }
+        return project;
+      });
+      return { ...state, projects };
+    case UNFAVORITED_PROJECT:
+      projects = projects.map(project => {
+        if (project.id === action.id) {
+          return { ...project, favorited: false };
+        }
+        return project;
+      });
+      return { ...state, projects };
     default:
       return state;
   }

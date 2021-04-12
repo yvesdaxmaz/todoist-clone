@@ -20,9 +20,11 @@ const NavSection = ({ title, counter, children, isActive, add }) => {
           {!dropped ? <BsChevronRight /> : <BsChevronDown />}
           <span className="flex-grow text-gray-800 font-bold">{title}</span>
         </div>
-        <Button bg="gray" bgOpacity={400} click={add}>
-          <BsPlus size="1.5em" />
-        </Button>
+        {add ? (
+          <Button bg="gray" bgOpacity={400} click={add}>
+            <BsPlus size="1.5em" />
+          </Button>
+        ) : null}
       </div>
       {dropped ? <nav>{children}</nav> : null}
     </>

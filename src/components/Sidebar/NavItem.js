@@ -12,6 +12,7 @@ const NavItem = ({
   optionable,
   tighten,
   archived,
+  favorited,
   id,
 }) => {
   const [hovered, setHovered] = useState(false);
@@ -71,6 +72,7 @@ const NavItem = ({
           enable={showMenu}
           hide={() => setShowMenu(false)}
           archived={archived}
+          favorited={favorited}
         />
       ) : null}
     </div>

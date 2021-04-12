@@ -19,6 +19,7 @@ const Nav = props => {
 
   let archivedProjects = projects.filter(project => project.archived);
   let nonArchivedProjects = projects.filter(project => !project.archived);
+  let favoritedProjects = projects.filter(project => project.favorited);
 
   return (
     <nav>
@@ -31,6 +32,17 @@ const Nav = props => {
       <NavItem title="Upcoming">
         <BsCalendar className="text-purple-600" size="1.5em" />
       </NavItem>
+      {favoritedProjects.length !== 0 ? (
+        <NavSection title="Favorites">
+          {favoritedProjects.map(({ id, name, color, favorited }) => {
+            return (
+              <NavItem title={name} key={id} optionable favorited id={id}>
+                <div className={`h-2 w-2 rounded-full ${color}`}></div>
+              </NavItem>
+            );
+          })}
+        </NavSection>
+      ) : null}
 
       <NavSection
         title="Projects"
