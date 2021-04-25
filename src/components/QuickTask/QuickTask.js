@@ -66,6 +66,7 @@ const QuickTask = props => {
         }),
       );
     }
+
     setDisplayLabelsList(false);
   };
 
@@ -91,6 +92,7 @@ const QuickTask = props => {
 
   const handleChangeSelectedProject = selectedId => {
     setSelectedProject(selectedId);
+    setDisplayProjectList(false);
   };
 
   useEffect(() => {
@@ -124,12 +126,17 @@ const QuickTask = props => {
   });
 
   return (
-    <div className="bg-white rounded p-4" ref={wrapperRef}>
+    <div className="bg-white rounded-lg p-4" ref={wrapperRef}>
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-sm font-bold text-gray-800">Quick Add Task</h2>
         <FaTimes size="1.5em" onClick={handleCancelAdd} />
       </div>
-      <div className="border border-gray-200 rounded p-2">
+      <div
+        className={
+          (editing ? 'border-gray-600' : 'border-gray-200') +
+          ' border rounded p-2'
+        }
+      >
         <div className="relative py-2">
           {!editing && taskDescription === '' ? (
             <div
@@ -146,12 +153,21 @@ const QuickTask = props => {
                 disabled={false}
                 onChange={handleChangeTaskDescription}
                 tagName="div"
-                className="text-gray-600 break-all outline-none"
+                className="w-full text-gray-600 break-all outline-none"
+                onFocus={() => {
+                  setEditing(true);
+                  console.log(taskDescription);
+                }}
+                onBlur={() => {
+                  setEditing(false);
+                  console.log(taskDescription);
+                  console.log(taskDescriptionRef.current);
+                }}
               />
             </div>
           )}
 
-          {attachedLabelsTags ? (
+          {attachedLabelsTags.length > 0 ? (
             <div className="flex items-center space-x-1 mt-4">
               {attachedLabelsTags}
             </div>
@@ -160,10 +176,10 @@ const QuickTask = props => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button texted bg="gray" bgOpacity="300" bordered>
-              <div className="">
+              <div className="text-green-500">
                 <BsCalendar />
               </div>
-              <span className="text-xs">Schedule</span>
+              <span className="text-xs">Today</span>
             </Button>
             <Button
               texted
@@ -263,7 +279,9 @@ const QuickTask = props => {
                         <NavItem
                           title={name}
                           key={id}
-                          click={() => handleAttachLabel(id)}
+                          click={() => {
+                            handleAttachLabel(id);
+                          }}
                         >
                           <IoMdPricetag size="1.5em" className={bg} />
                         </NavItem>
@@ -297,7 +315,10 @@ const QuickTask = props => {
       <div className="flex space-x-2 mt-2">
         <button
           className={
-            'bg-red-600 text-xs font-bold text-white border border-transparent rounded py-2 px-4'
+            (taskDescription === ''
+              ? 'bg-red-300 bg-opacity-75 '
+              : 'bg-red-600 ') +
+            'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
           }
         >
           Add task

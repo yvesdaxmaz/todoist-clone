@@ -97,7 +97,7 @@ const Nav = props => {
         title="Labels"
         add={e => {
           e.preventDefault();
-          console.log('add projects');
+          console.log('add labels');
         }}
       >
         {labels.map(({ id, name, counter, bg }) => {
