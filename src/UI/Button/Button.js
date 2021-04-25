@@ -9,15 +9,22 @@ const Button = ({
   bgOpacity,
   click,
   classes,
+  texted,
+  bordered,
 }) => {
   return (
     <button>
       <div
         className={
-          'group relative flex items-center justify-center rounded' +
-          (small ? ' h-5 w-5' : ' p-1 h-7 w-7') +
+          'group relative flex items-center justify-center rounded outline-none ' +
+          (texted
+            ? ' p-1 h-7 space-x-2'
+            : small
+            ? ' h-5 w-5'
+            : ' p-1 h-7 w-7') +
           (bg ? ` hover:bg-${bg}-${bgOpacity}` : ' hover:bg-red-100') +
-          ' hover:bg-opacity-25'
+          ' hover:bg-opacity-25' +
+          (bordered ? ' border border-gray-200' : '')
         }
         onClick={click}
       >

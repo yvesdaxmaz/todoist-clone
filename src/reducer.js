@@ -11,6 +11,8 @@ import {
   SHOW_EDIT_PROJECT_MODAL,
   SAVE_EDIT_PROJECT,
   HIDE_EDIT_PROJECT_MODAL,
+  SHOW_QUICK_TASK_MODAL,
+  HIDE_QUICK_TASK_MODAL,
 } from './actionTypes';
 const reducer = (state, action) => {
   let { projects } = state;
@@ -85,12 +87,17 @@ const reducer = (state, action) => {
 
     case SAVE_EDIT_PROJECT:
       projects = projects.map(project => {
-        if (project.id === action.id) {
-          return { id: action.id, ...action.project };
+        if (project.id === action.project.id) {
+          return Object.assign({}, project, action.project);
+          // return { id: action.id, ...action.project };
         }
         return project;
       });
       return { ...state, projects, editProject: false };
+    case SHOW_QUICK_TASK_MODAL:
+      return { ...state, quickTask: true };
+    case HIDE_QUICK_TASK_MODAL:
+      return { ...state, quickTask: false };
     default:
       return state;
   }

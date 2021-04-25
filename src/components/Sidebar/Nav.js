@@ -9,7 +9,7 @@ import { useStateValue } from './../../StateProvider';
 import { SHOW_ADD_PROJECT_MODAL } from './../../actionTypes';
 
 const Nav = props => {
-  const [{ addProject, labels, projects }, dispatch] = useStateValue();
+  const [{ labels, projects }, dispatch] = useStateValue();
 
   const handleAddProject = () => {
     dispatch({
@@ -17,9 +17,16 @@ const Nav = props => {
     });
   };
 
-  let archivedProjects = projects.filter(project => project.archived);
-  let nonArchivedProjects = projects.filter(project => !project.archived);
-  let favoritedProjects = projects.filter(project => project.favorited);
+  let archivedProjects = projects.filter(
+    project => project.archived && project.name !== 'Inbox',
+  );
+  let nonArchivedProjects = projects.filter(
+    project => !project.archived && project.name !== 'Inbox',
+  );
+  let favoritedProjects = projects.filter(
+    project =>
+      project.favorited && project.name !== 'Inbox' && !project.archived,
+  );
 
   return (
     <nav>
@@ -48,9 +55,7 @@ const Nav = props => {
         title="Projects"
         add={e => {
           e.preventDefault();
-
           handleAddProject();
-          console.log('add projects');
         }}
       >
         {nonArchivedProjects.map(({ id, name, color, archived }) => {
@@ -95,7 +100,7 @@ const Nav = props => {
           console.log('add projects');
         }}
       >
-        {labels.map(({ id, name, counter, bg, archived }) => {
+        {labels.map(({ id, name, counter, bg }) => {
           return (
             <NavItem title={name} key={id} tighten counter={counter}>
               <IoMdPricetag size="1.5em" className={bg} />

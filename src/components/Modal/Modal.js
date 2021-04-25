@@ -12,13 +12,13 @@ import {
   SAVE_EDIT_PROJECT,
 } from './../../actionTypes';
 
-const Modal = ({ edit }) => {
+const Modal = ({ edit, selectedProject }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState('bg-gray-300');
   const [favorited, setFavorited] = useState(false);
   const [view, setView] = useState('list');
 
-  const [{ selectedProject }, dispatch] = useStateValue();
+  const [state, dispatch] = useStateValue();
 
   const wrapperRef = useRef(null);
   const handleMouseDown = event => {
@@ -94,13 +94,13 @@ const Modal = ({ edit }) => {
   });
 
   useEffect(() => {
-    // if (edit) {
-    //   setName(selectedProject.name);
-    //   setColor(selectedProject.color);
-    //   setFavorited(selectedProject.favorited);
-    //   setView(selectedProject.view);
-    // }
-  });
+    if (edit) {
+      setName(selectedProject.name);
+      setColor(selectedProject.color);
+      setFavorited(selectedProject.favorited);
+      setView(selectedProject.view);
+    }
+  }, [selectedProject]);
 
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50">
@@ -172,7 +172,7 @@ const Modal = ({ edit }) => {
                 {edit ? (
                   <>
                     <button
-                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"
+                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 hover:border-gray-600 rounded py-2 px-4"
                       onClick={handleCancelEdit}
                     >
                       Cancel
@@ -193,7 +193,7 @@ const Modal = ({ edit }) => {
                 ) : (
                   <>
                     <button
-                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"
+                      className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 hover:border-gray-600 rounded py-2 px-4"
                       onClick={handleCancelAdd}
                     >
                       Cancel

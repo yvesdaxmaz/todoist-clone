@@ -32,7 +32,7 @@ const ColorSelector = ({ change, selected }) => {
     if (selected !== null) {
       setSelectedColor(selected);
     }
-  });
+  }, [selected]);
 
   return (
     <div className="relative">

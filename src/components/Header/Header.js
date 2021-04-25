@@ -6,8 +6,18 @@ import { FiPlus } from 'react-icons/fi';
 import profile from './../../images/profile.jpeg';
 import SearchBar from './../../UI/SearchBar/SearchBar';
 import Button from './../../UI/Button/Button';
+import { SHOW_QUICK_TASK_MODAL } from './../../actionTypes';
+import { useStateValue } from './../../StateProvider';
 
 const Header = props => {
+  const [state, dispatch] = useStateValue();
+
+  const handleQuickTask = () => {
+    console.log('click add new task');
+    dispatch({
+      type: SHOW_QUICK_TASK_MODAL,
+    });
+  };
   return (
     <header className="App-header">
       <div className="bg-red-600">
@@ -26,7 +36,11 @@ const Header = props => {
               </div>
             </div>
             <div className="flex space-x-2 items-center text-white">
-              <Button optinText="Quick Add Task" shortcutKey="q">
+              <Button
+                optinText="Quick Add Task"
+                shortcutKey="q"
+                click={handleQuickTask}
+              >
                 <FiPlus size="1.5em" />
               </Button>
 

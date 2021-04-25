@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GrDrag } from 'react-icons/gr';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots, BsCheck } from 'react-icons/bs';
 import NavItemOption from './NavItemOption';
 
 const NavItem = ({
@@ -14,6 +14,8 @@ const NavItem = ({
   archived,
   favorited,
   id,
+  click,
+  checked,
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -28,9 +30,12 @@ const NavItem = ({
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={click}
     >
       {children}
-      <span className={(tighten ? '' : 'flex-grow') + ' text-gray-800'}>
+      <span
+        className={(tighten ? '' : 'flex-grow text-left') + ' text-gray-800'}
+      >
         {title}
       </span>
       {!optionable && hovered ? (
@@ -75,6 +80,7 @@ const NavItem = ({
           favorited={favorited}
         />
       ) : null}
+      {checked ? <BsCheck className="text-yellow-500" /> : null}
     </div>
   );
 };

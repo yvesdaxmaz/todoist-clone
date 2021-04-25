@@ -12,7 +12,7 @@ const Switch = ({ label, change, enabled }) => {
     if (enabled) {
       setActivated(enabled);
     }
-  });
+  }, [enabled]);
   return (
     <div className="w-full text-sm h-8" onClick={handleClick}>
       <div className="flex items-center space-x-4 h-full">

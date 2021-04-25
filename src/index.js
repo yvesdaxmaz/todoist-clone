@@ -9,6 +9,7 @@ import reducer from './reducer';
 let initialState = {
   addProject: false,
   editProject: false,
+  quickTask: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
     { id: 2, name: 'urgent', bg: 'text-blue-300', counter: 2 },
@@ -16,13 +17,20 @@ let initialState = {
   ],
   projects: [
     {
+      id: 0,
+      name: 'Inbox',
+      color: 'bg-gray-300',
+      favorited: false,
+      view: 'list',
+      archived: false,
+    },
+    {
       id: 1,
       name: 'Welcome 👋',
       color: 'bg-gray-300',
       favorited: false,
       view: 'list',
       archived: false,
-      favorited: false,
     },
     {
       id: 2,
@@ -31,7 +39,6 @@ let initialState = {
       favorited: false,
       view: 'list',
       archived: false,
-      favorited: false,
     },
     {
       id: 3,
@@ -40,7 +47,6 @@ let initialState = {
       favorited: false,
       view: 'list',
       archived: true,
-      favorited: false,
     },
   ],
 };

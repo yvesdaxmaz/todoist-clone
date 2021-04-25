@@ -1,12 +1,16 @@
-import React, { useEffect, useContext } from 'react';
+import React from 'react';
 import Layout from './containers/Layout';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
 import Modal from './components/Modal/Modal';
 import { useStateValue } from './StateProvider';
+import QuickTask from './components/QuickTask/QuickTask';
 
 function App() {
-  const [state, dispatch] = useStateValue();
+  const [
+    { selectedProject, addProject, editProject, quickTask },
+    dispatch,
+  ] = useStateValue();
   return (
     <Layout>
       <div className="h-screen flex flex-col">
@@ -21,8 +25,17 @@ function App() {
             </div>
           </div>
         </div>
-        {state.addProject ? <Modal /> : null}
-        {state.editProject ? <Modal edit /> : null}
+        {addProject ? <Modal /> : null}
+        {editProject ? <Modal edit selectedProject={selectedProject} /> : null}
+        {quickTask ? (
+          <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50">
+            <div className="w-full h-screen flex items-center justify-center">
+              <div className="max-w-xl w-full py-8">
+                <QuickTask />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </Layout>
   );
