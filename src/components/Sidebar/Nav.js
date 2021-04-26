@@ -83,10 +83,7 @@ const Nav = props => {
                 archived={archived}
                 id={id}
               >
-                <div
-                  className={`h-2 w-2 rounded-full ${color}`}
-                  archived={archived}
-                ></div>
+                <div className={`h-2 w-2 rounded-full ${color}`}></div>
               </NavItem>
             );
           })}

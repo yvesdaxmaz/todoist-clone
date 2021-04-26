@@ -7,7 +7,10 @@ import { IoMdPricetag } from 'react-icons/io';
 import Button from './../../UI/Button/Button';
 import ContentEditable from 'react-contenteditable';
 import { useStateValue } from './../../StateProvider';
-import { HIDE_QUICK_TASK_MODAL } from './../../actionTypes';
+import {
+  HIDE_QUICK_TASK_MODAL,
+  ADD_TASK_TO_PROJECT,
+} from './../../actionTypes';
 import NavItem from './../Sidebar/NavItem';
 
 const QuickTask = props => {
@@ -18,7 +21,7 @@ const QuickTask = props => {
   const [taskDescription, setTaskDescription] = useState('');
   let [selectedProject, setSelectedProject] = useState(0);
   let [attachedLabels, setAttachedLabels] = useState([]);
-  const taskDescriptionRef = useRef(null);
+  const taskDescriptionRef = useRef('');
   const [{ labels, projects }, dispatch] = useStateValue();
   const wrapperRef = useRef(null);
 
@@ -55,6 +58,22 @@ const QuickTask = props => {
     setEditing(false);
   };
 
+  const handleAddTask = () => {
+    dispatch({
+      type: ADD_TASK_TO_PROJECT,
+      task: {
+        taskDescription,
+        projects: selectedProject,
+        labels: attachedLabels,
+        created_at: new Date(),
+      },
+    });
+
+    dispatch({
+      type: HIDE_QUICK_TASK_MODAL,
+    });
+  };
+
   const handleAttachLabel = id => {
     let index = attachedLabels.findIndex(current => current === id);
     if (index === -1) {
@@ -71,10 +90,12 @@ const QuickTask = props => {
   };
 
   const handleChangeTaskDescription = event => {
+    // taskDescriptionRef.current = event.target.value;
     setTaskDescription(event.target.value);
   };
 
   const handleStartEditing = () => {
+    console.log(taskDescriptionRef);
     setEditing(true);
   };
 
@@ -138,7 +159,8 @@ const QuickTask = props => {
         }
       >
         <div className="relative py-2">
-          {!editing && taskDescription === '' ? (
+          {!editing &&
+          (taskDescription === '' || taskDescription === '<br>') ? (
             <div
               className="w-full text-gray-300 text-sm"
               onClick={handleStartEditing}
@@ -156,12 +178,9 @@ const QuickTask = props => {
                 className="w-full text-gray-600 break-all outline-none"
                 onFocus={() => {
                   setEditing(true);
-                  console.log(taskDescription);
                 }}
                 onBlur={() => {
                   setEditing(false);
-                  console.log(taskDescription);
-                  console.log(taskDescriptionRef.current);
                 }}
               />
             </div>
@@ -315,11 +334,12 @@ const QuickTask = props => {
       <div className="flex space-x-2 mt-2">
         <button
           className={
-            (taskDescription === ''
+            (taskDescription === '' || taskDescription === '<br>'
               ? 'bg-red-300 bg-opacity-75 '
               : 'bg-red-600 ') +
             'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
           }
+          onClick={handleAddTask}
         >
           Add task
         </button>

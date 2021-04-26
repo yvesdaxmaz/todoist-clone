@@ -15,6 +15,15 @@ let initialState = {
     { id: 2, name: 'urgent', bg: 'text-blue-300', counter: 2 },
     { id: 3, name: 'important', bg: 'text-red-500', counter: 2 },
   ],
+  tasks: [
+    {
+      id: 1,
+      project_id: 1,
+      labels: [1,2,3],
+      description: 'First task for this project',
+      created_at: new Date(),
+    },
+  ],
   projects: [
     {
       id: 0,

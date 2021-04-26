@@ -13,6 +13,7 @@ import {
   HIDE_EDIT_PROJECT_MODAL,
   SHOW_QUICK_TASK_MODAL,
   HIDE_QUICK_TASK_MODAL,
+  ADD_TASK_TO_PROJECT,
 } from './actionTypes';
 const reducer = (state, action) => {
   let { projects } = state;
@@ -98,6 +99,20 @@ const reducer = (state, action) => {
       return { ...state, quickTask: true };
     case HIDE_QUICK_TASK_MODAL:
       return { ...state, quickTask: false };
+
+    case ADD_TASK_TO_PROJECT:
+      let { tasks } = state;
+
+      console.log(action, state);
+      return {
+        ...state,
+        tasks: [
+          ...tasks,
+          {
+            ...action.task,
+          },
+        ],
+      };
     default:
       return state;
   }
