@@ -19,8 +19,19 @@ let initialState = {
     {
       id: 1,
       project_id: 1,
-      labels: [1,2,3],
-      description: 'First task for this project',
+      description: 'Tap the checkbox to complete this task ✅',
+      created_at: new Date(),
+    },
+    {
+      id: 2,
+      project_id: 1,
+      description: 'Swipe left to schedule this task 📅',
+      created_at: new Date(),
+    },
+    {
+      id: 3,
+      project_id: 1,
+      description: 'reate your own project 🗒',
       created_at: new Date(),
     },
   ],
