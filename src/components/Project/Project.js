@@ -7,7 +7,6 @@ import Button from './../../UI/Button/Button';
 import Task from './../Task/Task';
 import { useStateValue } from './../../StateProvider';
 const Project = ({ project, tasks }) => {
-  console.log(tasks);
   return (
     <div>
       <header className="pt-12 pb-8">

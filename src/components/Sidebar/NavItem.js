@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GrDrag } from 'react-icons/gr';
 import { BsThreeDots, BsCheck } from 'react-icons/bs';
 import NavItemOption from './NavItemOption';
+import { Link } from 'react-router-dom';
 
 const NavItem = ({
   title,
@@ -16,6 +17,7 @@ const NavItem = ({
   id,
   click,
   checked,
+  to,
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -32,12 +34,31 @@ const NavItem = ({
       onMouseLeave={() => setHovered(false)}
       onClick={click}
     >
-      {children}
-      <span
-        className={(tighten ? '' : 'flex-grow text-left') + ' text-gray-800'}
-      >
-        {title}
-      </span>
+      {to ? (
+        <Link to={to} className="flex-grow">
+          <div className="flex space-x-4 items-center">
+            {children}
+            <span
+              className={
+                (tighten ? '' : 'flex-grow text-left') + ' text-gray-800'
+              }
+            >
+              {title}
+            </span>
+          </div>
+        </Link>
+      ) : (
+        <div className="flex space-x-4 items-center">
+          {children}
+          <span
+            className={
+              (tighten ? '' : 'flex-grow text-left') + ' text-gray-800'
+            }
+          >
+            {title}
+          </span>
+        </div>
+      )}
       {!optionable && hovered ? (
         <span
           className={

@@ -7,7 +7,6 @@ import NavSection from './NavSection';
 import NavToggleItem from './NavToggleItem';
 import { useStateValue } from './../../StateProvider';
 import { SHOW_ADD_PROJECT_MODAL } from './../../actionTypes';
-import { Link } from 'react-router-dom';
 
 const Nav = props => {
   const [{ labels, projects }, dispatch] = useStateValue();
@@ -44,7 +43,14 @@ const Nav = props => {
         <NavSection title="Favorites">
           {favoritedProjects.map(({ id, name, color, favorited }) => {
             return (
-              <NavItem title={name} key={id} optionable favorited id={id}>
+              <NavItem
+                to={`/app/project/${id}`}
+                title={name}
+                key={id}
+                optionable
+                favorited
+                id={id}
+              >
                 <div className={`h-2 w-2 rounded-full ${color}`}></div>
               </NavItem>
             );
@@ -61,34 +67,34 @@ const Nav = props => {
       >
         {nonArchivedProjects.map(({ id, name, color, archived }) => {
           return (
-            <Link to={`/app/project/${id}`} key={id}>
-              <NavItem
-                title={name}
-                optionable
-                draggable
-                archived={archived}
-                id={id}
-              >
-                <div className={`h-2 w-2 rounded-full ${color}`}></div>
-              </NavItem>
-            </Link>
+            <NavItem
+              title={name}
+              key={id}
+              to={`/app/project/${id}`}
+              optionable
+              draggable
+              archived={archived}
+              id={id}
+            >
+              <div className={`h-2 w-2 rounded-full ${color}`}></div>
+            </NavItem>
           );
         })}
 
         <NavToggleItem offTitle="Archived projects" onTitle="Hide Archived">
           {archivedProjects.map(({ id, name, color, archived }) => {
             return (
-              <Link to={`/app/project/${id}`} key={id}>
-                <NavItem
-                  title={name}
-                  key={id}
-                  optionable
-                  archived={archived}
-                  id={id}
-                >
-                  <div className={`h-2 w-2 rounded-full ${color}`}></div>
-                </NavItem>
-              </Link>
+              <NavItem
+                title={name}
+                key={id}
+                to={`/app/project/${id}`}
+                key={id}
+                optionable
+                archived={archived}
+                id={id}
+              >
+                <div className={`h-2 w-2 rounded-full ${color}`}></div>
+              </NavItem>
             );
           })}
         </NavToggleItem>

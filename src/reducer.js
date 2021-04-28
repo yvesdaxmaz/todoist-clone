@@ -4,6 +4,8 @@ import {
   ARCHIVE_PROJECT,
   UNARCHIVE_PROJECT,
   DELETE_PROJECT,
+  DELETE_PROJECT_CONFIRM,
+  DELETE_PROJECT_CANCEL,
   DUPLICATE_PROJECT,
   ADD_PROJECT,
   FAVORITED_PROJECT,
@@ -42,11 +44,24 @@ const reducer = (state, action) => {
       return { ...state, projects };
 
     case DELETE_PROJECT:
+      project = projects.find(project => project.id === action.id);
+      return {
+        ...state,
+        delete_project: project,
+      };
+
+    case DELETE_PROJECT_CONFIRM:
       return {
         ...state,
         projects: state.projects.filter(project => {
-          return project.id !== action.id;
+          return project.id !== state.delete_project.id;
         }),
+        delete_project: false,
+      };
+    case DELETE_PROJECT_CANCEL:
+      return {
+        ...state,
+        delete_project: false,
       };
     case DUPLICATE_PROJECT:
       project = projects.find(project => project.id === action.id);

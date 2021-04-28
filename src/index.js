@@ -9,6 +9,7 @@ import reducer from './reducer';
 let initialState = {
   addProject: false,
   editProject: false,
+  delete_project: false,
   quickTask: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
@@ -18,26 +19,26 @@ let initialState = {
   tasks: [
     {
       id: 1,
-      project_id: 1,
+      project_id: 2,
       description: 'Tap the checkbox to complete this task ✅',
       created_at: new Date(),
     },
     {
       id: 2,
-      project_id: 1,
+      project_id: 2,
       description: 'Swipe left to schedule this task 📅',
       created_at: new Date(),
     },
     {
       id: 3,
-      project_id: 1,
+      project_id: 2,
       description: 'reate your own project 🗒',
       created_at: new Date(),
     },
   ],
   projects: [
     {
-      id: 0,
+      id: 1,
       name: 'Inbox',
       color: 'bg-gray-300',
       favorited: false,
@@ -45,7 +46,7 @@ let initialState = {
       archived: false,
     },
     {
-      id: 1,
+      id: 2,
       name: 'Welcome 👋',
       color: 'bg-gray-300',
       favorited: false,
@@ -53,7 +54,7 @@ let initialState = {
       archived: false,
     },
     {
-      id: 2,
+      id: 3,
       name: 'Learning',
       color: 'bg-blue-300',
       favorited: false,
@@ -61,7 +62,7 @@ let initialState = {
       archived: false,
     },
     {
-      id: 3,
+      id: 4,
       name: 'Machine learning',
       color: 'bg-purple-500',
       favorited: false,

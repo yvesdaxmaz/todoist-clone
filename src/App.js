@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Layout from './containers/Layout';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
 import Modal from './components/Modal/Modal';
+import { BsInfoCircle } from 'react-icons/bs';
 import { useStateValue } from './StateProvider';
 import QuickTask from './components/QuickTask/QuickTask';
+import ConfirmDeleteModal from './components/ConfirmDeleteModal/ConfirmDeleteModal';
 import Project from './components/Project/Project';
 import {
   BrowserRouter as Router,
@@ -15,9 +17,18 @@ import {
 
 function App() {
   const [
-    { selectedProject, addProject, editProject, quickTask, projects, tasks },
+    {
+      selectedProject,
+      addProject,
+      editProject,
+      quickTask,
+      projects,
+      tasks,
+      delete_project,
+    },
     dispatch,
   ] = useStateValue();
+  const delete_project_ref = useRef(null);
   return (
     <Router>
       <Layout>
@@ -45,6 +56,9 @@ function App() {
                         const current_project = projects.find(
                           project => project.id == project_id,
                         );
+                        if (current_project === -1) {
+                          routeParams.history.push('/app/today');
+                        }
 
                         let current_project_tasks = [...tasks].filter(
                           currentTask => currentTask.project_id == project_id,
@@ -76,6 +90,7 @@ function App() {
               </div>
             </div>
           ) : null}
+          {delete_project ? <ConfirmDeleteModal /> : null}
         </div>
       </Layout>
     </Router>

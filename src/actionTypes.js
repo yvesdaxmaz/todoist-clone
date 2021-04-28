@@ -15,3 +15,7 @@ export const HIDE_QUICK_TASK_MODAL = 'HIDE_QUICK_TASK_MODAL';
 
 // tasks actions
 export const ADD_TASK_TO_PROJECT = 'ADD_TASK_TO_PROJECT';
+
+// delete project
+export const DELETE_PROJECT_CONFIRM = 'DELETE_PROJECT_CONFIRM';
+export const DELETE_PROJECT_CANCEL = 'DELETE_PROJECT_CANCEL';
