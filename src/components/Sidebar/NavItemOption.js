@@ -23,6 +23,7 @@ import {
 } from './../../actionTypes';
 
 const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
+  // eslint-disable-next-line no-unused-vars
   const [state, dispatch] = useStateValue();
   const wrapperRef = useRef(null);
   const handleMouseDown = event => {

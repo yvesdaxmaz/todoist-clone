@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BsCheck, BsCalendar, BsThreeDots } from 'react-icons/bs';
+import { BsCalendar, BsThreeDots } from 'react-icons/bs';
 import { GrDrag } from 'react-icons/gr';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { GoComment } from 'react-icons/go';

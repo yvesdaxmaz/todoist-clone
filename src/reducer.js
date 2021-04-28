@@ -69,6 +69,7 @@ const reducer = (state, action) => {
       const project_copied = {
         ...project,
         name: `Copy of ${project.name}`,
+        favorited: false,
         id: last_project.id + 1,
       };
       return { ...state, projects: [...projects, project_copied] };

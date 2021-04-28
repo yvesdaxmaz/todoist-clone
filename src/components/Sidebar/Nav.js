@@ -86,7 +86,6 @@ const Nav = props => {
             return (
               <NavItem
                 title={name}
-                key={id}
                 to={`/app/project/${id}`}
                 key={id}
                 optionable

@@ -28,7 +28,6 @@ const ConfirmDeleteModal = props => {
     dispatch({
       type: DELETE_PROJECT_CONFIRM,
     });
-    console.log(history);
     history.push('/app/today');
   };
 

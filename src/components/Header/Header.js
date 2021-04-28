@@ -10,6 +10,7 @@ import { SHOW_QUICK_TASK_MODAL } from './../../actionTypes';
 import { useStateValue } from './../../StateProvider';
 
 const Header = props => {
+  // eslint-disable-next-line no-unused-vars
   const [state, dispatch] = useStateValue();
 
   const handleQuickTask = () => {

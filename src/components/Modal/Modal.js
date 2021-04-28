@@ -100,7 +100,7 @@ const Modal = ({ edit, selectedProject }) => {
       setFavorited(selectedProject.favorited);
       setView(selectedProject.view);
     }
-  }, [selectedProject]);
+  }, [edit, selectedProject]);
 
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50">

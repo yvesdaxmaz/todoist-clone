@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { GoComment } from 'react-icons/go';
 import { BiUserPlus } from 'react-icons/bi';
 import { BsArrowUpDown, BsThreeDots } from 'react-icons/bs';
 import Button from './../../UI/Button/Button';
 import Task from './../Task/Task';
-import { useStateValue } from './../../StateProvider';
 const Project = ({ project, tasks }) => {
   return (
     <div>
