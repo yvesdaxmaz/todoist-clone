@@ -47,12 +47,15 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       type: ARCHIVE_PROJECT,
       id,
     });
+    hide();
   };
   const handleUnarchiveProject = () => {
     dispatch({
       type: UNARCHIVE_PROJECT,
       id,
     });
+
+    hide();
   };
 
   const handleDeleteProject = () => {
@@ -60,6 +63,8 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       type: DELETE_PROJECT,
       id,
     });
+
+    hide();
   };
 
   const handleFavoritedProject = () => {
@@ -75,6 +80,8 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       type: UNFAVORITED_PROJECT,
       id,
     });
+
+    hide();
   };
 
   const handleShowEditProject = () => {
@@ -82,6 +89,8 @@ const NavItemOption = ({ enableld, hide, archived, id, favorited }) => {
       type: SHOW_EDIT_PROJECT_MODAL,
       id,
     });
+
+    hide();
   };
   return (
     <div
