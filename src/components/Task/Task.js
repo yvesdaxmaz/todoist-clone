@@ -15,7 +15,7 @@ const Task = ({ task }) => {
     >
       <div className="h-5 w-5 border border-gray-600 rounded-full"></div>
       <div className="flex-grow text-sm text-gray-800 py-1">
-        Tap the checkbox to complete this task ✅
+        {task.description}
       </div>
       {hovered ? (
         <div className="flex items-center space-x-2 text-gray-300">

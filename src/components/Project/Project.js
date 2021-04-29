@@ -40,7 +40,6 @@ const Project = ({ project, tasks }) => {
               />
             );
           })}
-          <Task />
         </div>
       </section>
     </div>

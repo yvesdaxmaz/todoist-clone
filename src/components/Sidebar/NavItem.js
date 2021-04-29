@@ -48,7 +48,7 @@ const NavItem = ({
           </div>
         </Link>
       ) : (
-        <div className="flex space-x-4 items-center">
+        <div className="flex flex-grow space-x-4 items-center">
           {children}
           <span
             className={
