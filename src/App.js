@@ -24,6 +24,7 @@ function App() {
       projects,
       tasks,
       delete_project,
+      delete_comment,
     },
     // eslint-disable-next-line no-unused-vars
     dispatch,
@@ -90,7 +91,8 @@ function App() {
               </div>
             </div>
           ) : null}
-          {delete_project ? <ConfirmDeleteModal /> : null}
+
+          {delete_project || delete_comment ? <ConfirmDeleteModal /> : null}
         </div>
       </Layout>
     </Router>

@@ -10,6 +10,7 @@ let initialState = {
   addProject: false,
   editProject: false,
   delete_project: false,
+  delete_comment: false,
   quickTask: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
@@ -68,6 +69,20 @@ let initialState = {
       favorited: false,
       view: 'list',
       archived: true,
+    },
+  ],
+  comments: [
+    {
+      id: 1,
+      comment: 'This is the first comment of this project.',
+      project_id: 2,
+      createdAt: new Date(),
+    },
+    {
+      id: 2,
+      comment: 'This is the second comment of this project.',
+      project_id: 2,
+      createdAt: new Date(),
     },
   ],
 };

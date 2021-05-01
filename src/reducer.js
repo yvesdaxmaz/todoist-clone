@@ -16,10 +16,17 @@ import {
   SHOW_QUICK_TASK_MODAL,
   HIDE_QUICK_TASK_MODAL,
   ADD_TASK_TO_PROJECT,
+  ADD_COMMENT_TO_PROJECT,
+  DELETE_COMMENT_TO_PROJECT,
+  DELETE_COMMENT_TO_PROJECT_CONFIRM,
+  DELETE_COMMENT_TO_PROJECT_CANCEL,
+  UPDATE_COMMENT_OF_PROJECT,
 } from './actionTypes';
 const reducer = (state, action) => {
-  let { projects } = state;
+  console.log(action);
+  let { projects, comments } = state;
   let project,
+    comment,
     last_project = null;
   switch (action.type) {
     case SHOW_ADD_PROJECT_MODAL:
@@ -118,8 +125,6 @@ const reducer = (state, action) => {
 
     case ADD_TASK_TO_PROJECT:
       let { tasks } = state;
-
-      console.log(action, state);
       return {
         ...state,
         tasks: [
@@ -129,6 +134,53 @@ const reducer = (state, action) => {
           },
         ],
       };
+
+    case ADD_COMMENT_TO_PROJECT:
+      let last_comment = comments[comments.length - 1];
+
+      return {
+        ...state,
+        comments: [
+          ...state.comments,
+          { id: last_comment + 1, ...action.comment },
+        ],
+      };
+
+    case DELETE_COMMENT_TO_PROJECT:
+      comment = comments.find(
+        current_comment => current_comment.id === action.comment_id,
+      );
+      return {
+        ...state,
+        delete_comment: comment,
+      };
+
+    case DELETE_COMMENT_TO_PROJECT_CONFIRM:
+      return {
+        ...state,
+        comments: state.comments.filter(comment => {
+          return comment.id !== state.delete_comment.id;
+        }),
+        delete_comment: false,
+      };
+    case DELETE_COMMENT_TO_PROJECT_CANCEL:
+      return {
+        ...state,
+        delete_comment: false,
+      };
+    case UPDATE_COMMENT_OF_PROJECT:
+      comments = [...comments].map(current_comment => {
+        if (current_comment.id === action.comment_id) {
+          return { ...current_comment, comment: action.comment_text };
+        } else {
+          return current_comment;
+        }
+      });
+      return {
+        ...state,
+        comments,
+      };
+
     default:
       return state;
   }

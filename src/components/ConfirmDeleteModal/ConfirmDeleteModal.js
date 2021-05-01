@@ -3,32 +3,58 @@ import { useStateValue } from './../../StateProvider';
 import {
   DELETE_PROJECT_CANCEL,
   DELETE_PROJECT_CONFIRM,
+  DELETE_COMMENT_TO_PROJECT_CANCEL,
+  DELETE_COMMENT_TO_PROJECT_CONFIRM,
 } from './../../actionTypes';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 
 const ConfirmDeleteModal = props => {
   const wrapperRef = useRef(null);
-  const [{ delete_project }, dispatch] = useStateValue();
+  const [{ delete_project, delete_comment }, dispatch] = useStateValue();
   let history = useHistory();
+  let { url } = useRouteMatch();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      dispatch({
-        type: DELETE_PROJECT_CANCEL,
-      });
+      if (delete_project) {
+        dispatch({
+          type: DELETE_PROJECT_CANCEL,
+        });
+      }
+      if (delete_comment) {
+        dispatch({
+          type: DELETE_COMMENT_TO_PROJECT_CANCEL,
+        });
+      }
     }
   };
 
   const handleCancelDelete = () => {
-    dispatch({
-      type: DELETE_PROJECT_CANCEL,
-    });
+    if (delete_project) {
+      dispatch({
+        type: DELETE_PROJECT_CANCEL,
+      });
+    }
+    if (delete_comment) {
+      dispatch({
+        type: DELETE_COMMENT_TO_PROJECT_CANCEL,
+      });
+    }
   };
+
   const handleConfirmDelete = () => {
-    dispatch({
-      type: DELETE_PROJECT_CONFIRM,
-    });
-    history.push('/app/today');
+    if (delete_project) {
+      dispatch({
+        type: DELETE_PROJECT_CONFIRM,
+      });
+      history.push('/app/today');
+    }
+    if (delete_comment) {
+      dispatch({
+        type: DELETE_COMMENT_TO_PROJECT_CONFIRM,
+      });
+      history.push(url);
+    }
   };
 
   useEffect(() => {
@@ -50,10 +76,13 @@ const ConfirmDeleteModal = props => {
               <div className="text-gray-800">
                 <div className="w-full text-sm text-gray-600">
                   Are you sure you want to delete
-                  <span className="text-gray-800 font-bold">
-                    {delete_project.name}
-                  </span>
-                  ?
+                  {delete_project ? (
+                    <span className="text-gray-800 font-bold">
+                      {` ${delete_project.name}?`}
+                    </span>
+                  ) : (
+                    <>{` this?`}</>
+                  )}
                 </div>
               </div>
             </div>

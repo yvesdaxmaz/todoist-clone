@@ -49,20 +49,16 @@ const Header = props => {
                 <BsQuestionCircle size="1.5em" />
               </Button>
 
-              <button>
-                <div className="flex items-center space-x-2 px-2 p-1 h-7 hover:bg-red-100 hover:bg-opacity-25 rounded">
-                  <div className="border border-white rounded-full">
-                    <MdTrendingUp />
-                  </div>
-                  <span className="text-sm">0/5</span>
+              <Button texted>
+                <div className="border border-white rounded-full">
+                  <MdTrendingUp size="1em" />
                 </div>
-              </button>
+                <span className="text-sm">0/5</span>
+              </Button>
 
-              <button href="#">
-                <div className="flex items-center justify-center h-7 w-7 hover:bg-red-100 hover:bg-opacity-25 rounded">
-                  <VscBell size="1.5em" />
-                </div>
-              </button>
+              <Button>
+                <VscBell size="1.5em" />
+              </Button>
 
               <div>
                 <div className="h-7 w-7">

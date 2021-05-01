@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Button = ({
   children,
@@ -11,12 +12,13 @@ const Button = ({
   classes,
   texted,
   bordered,
+  to,
 }) => {
   return (
-    <button>
+    <button className="focus:outline-none ">
       <div
         className={
-          'group relative flex items-center justify-center rounded outline-none ' +
+          'group relative flex items-center justify-center rounded outline-none focus:outline-none ' +
           (texted
             ? ' p-1 h-7 space-x-2'
             : small
@@ -28,7 +30,13 @@ const Button = ({
         }
         onClick={click}
       >
-        <>{children}</>
+        {to === undefined ? (
+          <>{children}</>
+        ) : (
+          <Link to={to} className="flex flex-grow space-x-2 items-center">
+            {children}
+          </Link>
+        )}
         {optinText ? (
           <div className="hidden group-hover:block absolute whitespace-nowrap w-auto transform translate-y-full z-10">
             <div className="flex h-8 space-x-2 items-center z-75 text-xs bg-gray-800 py-1 px-2 rounded">
