@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import profile from './../../images/profile.jpeg';
 import ContentEditable from 'react-contenteditable';
 import Button from './../../UI/Button/Button';

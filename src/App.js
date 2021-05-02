@@ -62,6 +62,7 @@ function App() {
 
                         let current_project_tasks = [...tasks].filter(
                           currentTask =>
+                            currentTask.parent_type === undefined &&
                             currentTask.project_id === parseInt(project_id),
                         );
                         return (

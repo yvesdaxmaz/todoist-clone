@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import { useRouteMatch, useHistory, Route } from 'react-router-dom';
+import { Redirect, useRouteMatch, useHistory, Route } from 'react-router-dom';
 import { GoComment } from 'react-icons/go';
 import { BiUserPlus } from 'react-icons/bi';
 import { BsArrowUpDown, BsThreeDots, BsPlus } from 'react-icons/bs';
 import Button from './../../UI/Button/Button';
 import Task from './../Task/Task';
 import ProjectCommentModal from './../ProjectCommentModal/ProjectCommentModal';
+import ProjectTaskModal from './../ProjectTaskModal/ProjectTaskModal';
 import TaskEditor from './../TaskEditor/TaskEditor';
+import { useStateValue } from './../../StateProvider';
 
 const Project = ({ project, tasks }) => {
-  const [addProject, setAddProject] = useState(false);
+  const [addTask, setAddTask] = useState(false);
   const { url } = useRouteMatch();
+  const [state, dispatch] = useStateValue();
   const history = useHistory();
   const handleCommentProject = () => {
     history.push(`${url}/comments`);
   };
 
-  const handleAddProject = () => {
-    setAddProject(true);
+  const handleAddTask = () => {
+    setAddTask(true);
   };
 
-  const handleCancelAddProject = () => {
-    setAddProject(false);
+  const handleCancelAddTask = () => {
+    setAddTask(false);
+  };
+
+  const handleAddTaskCompleted = () => {
+    setAddTask(false);
+  };
+
+  const handleTaskDoubleClick = taskId => {
+    history.push(`${url}/task/${taskId}`);
   };
 
   return (
@@ -68,12 +79,17 @@ const Project = ({ project, tasks }) => {
               <Task
                 task={{ ...current_task }}
                 key={`task-${current_task.id}`}
+                clicked={event => {
+                  if (event.detail === 2) {
+                    handleTaskDoubleClick(current_task.id);
+                  }
+                }}
               />
             );
           })}
         </div>
-        {!addProject ? (
-          <div className="flex space-x-2 group py-2" onClick={handleAddProject}>
+        {!addTask ? (
+          <div className="flex space-x-2 group py-2" onClick={handleAddTask}>
             <div className="flex items-center justify-center h-5 w-5 rounded-full group-hover:bg-red-500">
               <BsPlus
                 size="1.2em"
@@ -87,7 +103,10 @@ const Project = ({ project, tasks }) => {
           </div>
         ) : (
           <div className="py-2">
-            <TaskEditor cancel={handleCancelAddProject} />
+            <TaskEditor
+              cancelled={handleCancelAddTask}
+              completed={handleAddTaskCompleted}
+            />
           </div>
         )}
       </section>
@@ -96,6 +115,27 @@ const Project = ({ project, tasks }) => {
         path="/app/project/:project_id/comments"
         render={routeParams => {
           return <ProjectCommentModal project={project} {...routeParams} />;
+        }}
+      />
+      <Route
+        path="/app/project/:project_id/task/:task_id"
+        render={routeParams => {
+          let task = state.tasks.find(current_task => {
+            return (
+              current_task.id === parseInt(routeParams.match.params.task_id)
+            );
+          });
+          if (task) {
+            return (
+              <ProjectTaskModal
+                project={project}
+                task={task}
+                {...routeParams}
+              />
+            );
+          } else {
+            return Redirect(url);
+          }
         }}
       />
     </div>

@@ -16,6 +16,7 @@ import {
   SHOW_QUICK_TASK_MODAL,
   HIDE_QUICK_TASK_MODAL,
   ADD_TASK_TO_PROJECT,
+  UPDATE_TASK_OF_PROJECT,
   ADD_COMMENT_TO_PROJECT,
   DELETE_COMMENT_TO_PROJECT,
   DELETE_COMMENT_TO_PROJECT_CONFIRM,
@@ -23,8 +24,7 @@ import {
   UPDATE_COMMENT_OF_PROJECT,
 } from './actionTypes';
 const reducer = (state, action) => {
-  console.log(action);
-  let { projects, comments } = state;
+  let { projects, comments, tasks } = state;
   let project,
     comment,
     last_project = null;
@@ -124,15 +124,29 @@ const reducer = (state, action) => {
       return { ...state, quickTask: false };
 
     case ADD_TASK_TO_PROJECT:
-      let { tasks } = state;
+      tasks = [
+        ...tasks,
+        {
+          id: tasks[tasks.length - 1].id + 1,
+          ...action.task,
+        },
+      ];
       return {
         ...state,
-        tasks: [
-          ...tasks,
-          {
-            ...action.task,
-          },
-        ],
+        tasks,
+      };
+
+    case UPDATE_TASK_OF_PROJECT:
+      tasks = [...tasks].map(current_task => {
+        if (current_task.id === action.task.id) {
+          return { ...current_task, ...action.task };
+        } else {
+          return current_task;
+        }
+      });
+      return {
+        ...state,
+        tasks,
       };
 
     case ADD_COMMENT_TO_PROJECT:
@@ -142,7 +156,10 @@ const reducer = (state, action) => {
         ...state,
         comments: [
           ...state.comments,
-          { id: last_comment + 1, ...action.comment },
+          {
+            id: last_comment ? parseInt(last_comment.id) + 1 : 1,
+            ...action.comment,
+          },
         ],
       };
 

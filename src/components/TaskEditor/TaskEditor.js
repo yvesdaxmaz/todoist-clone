@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import { BsCalendar, BsInbox, BsFlag } from 'react-icons/bs';
 import { AiOutlineTag } from 'react-icons/ai';
 import { GiAlarmClock } from 'react-icons/gi';
@@ -10,11 +9,19 @@ import { useStateValue } from './../../StateProvider';
 import {
   HIDE_QUICK_TASK_MODAL,
   ADD_TASK_TO_PROJECT,
+  UPDATE_TASK_OF_PROJECT,
 } from './../../actionTypes';
 import NavItem from './../Sidebar/NavItem';
 import { useHistory } from 'react-router-dom';
 
-const TaskEditor = ({ cancel }) => {
+const TaskEditor = ({
+  task,
+  type,
+  parent,
+  cancelled,
+  isQuickTask,
+  completed,
+}) => {
   const {
     location: { pathname },
   } = useHistory();
@@ -33,11 +40,17 @@ const TaskEditor = ({ cancel }) => {
   const displayLabelsListRef = useRef(null);
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      dispatch({
-        type: HIDE_QUICK_TASK_MODAL,
-      });
+      if (isQuickTask) {
+        dispatch({
+          type: HIDE_QUICK_TASK_MODAL,
+        });
+      }
       setEditing(false);
-      setTaskDescription('');
+      if (task) {
+        setTaskDescription(task.description);
+      } else {
+        setTaskDescription('');
+      }
     }
 
     if (
@@ -56,30 +69,90 @@ const TaskEditor = ({ cancel }) => {
   };
 
   const handleCancelAdd = () => {
-    if (cancel) {
-      cancel();
+    if (cancelled) {
+      cancelled();
     }
     dispatch({
       type: HIDE_QUICK_TASK_MODAL,
     });
-    setTaskDescription('');
+    if (task) {
+      setTaskDescription(task.description);
+    } else {
+      setTaskDescription('');
+    }
+
     setEditing(false);
   };
 
-  const handleAddTask = () => {
-    dispatch({
-      type: ADD_TASK_TO_PROJECT,
-      task: {
-        taskDescription,
-        projects: selectedProject.id,
-        labels: attachedLabels,
-        created_at: new Date(),
-      },
-    });
+  const handleSaveTask = () => {
+    if (!task) {
+      if (type && parent) {
+        dispatch({
+          type: ADD_TASK_TO_PROJECT,
+          task: {
+            labels: attachedLabels,
+            parent_id: parent.id,
+            parent_type: type,
+            project_id: selectedProject.id,
+            description: taskDescription,
+            created_at: new Date(),
+          },
+        });
+      } else {
+        dispatch({
+          type: ADD_TASK_TO_PROJECT,
+          task: {
+            labels: attachedLabels,
+            project_id: selectedProject.id,
+            description: taskDescription,
+            created_at: new Date(),
+          },
+        });
+      }
+    } else {
+      if (
+        task.description === taskDescription &&
+        task.labels === attachedLabels &&
+        task.project_id === selectedProject.id
+      ) {
+        completed();
+        return false;
+      }
+      if (type && parent) {
+        dispatch({
+          type: UPDATE_TASK_OF_PROJECT,
+          task: {
+            ...task,
+            description: taskDescription,
+            labels: attachedLabels,
+            parent_id: parent.id,
+            project_id: selectedProject.id,
+            updated_at: new Date(),
+          },
+        });
+      } else {
+        dispatch({
+          type: UPDATE_TASK_OF_PROJECT,
+          task: {
+            ...task,
+            description: taskDescription,
+            labels: attachedLabels,
+            project_id: selectedProject.id,
+            updated_at: new Date(),
+          },
+        });
+      }
+    }
 
-    dispatch({
-      type: HIDE_QUICK_TASK_MODAL,
-    });
+    if (completed) {
+      completed();
+    }
+
+    if (isQuickTask) {
+      dispatch({
+        type: HIDE_QUICK_TASK_MODAL,
+      });
+    }
   };
 
   const handleAttachLabel = id => {
@@ -140,7 +213,11 @@ const TaskEditor = ({ cancel }) => {
       );
       setSelectedProject(current_project);
     }
-  }, []);
+    if (task) {
+      setTaskDescription(task.description);
+      setAttachedLabels(task.labels);
+    }
+  }, [projects, pathname, task]);
 
   let nonArchivedProjects = projects.filter(project => !project.archived);
   if (projectFilter !== '') {
@@ -249,7 +326,7 @@ const TaskEditor = ({ cancel }) => {
                   <div>
                     <nav>
                       {nonArchivedProjects.map(project => {
-                        const { id, name, color, archived } = project;
+                        const { id, name, color } = project;
                         if (name === 'Inbox') {
                           return (
                             <NavItem
@@ -350,9 +427,9 @@ const TaskEditor = ({ cancel }) => {
               : 'bg-red-600 ') +
             'text-xs font-bold text-white border border-transparent rounded py-2 px-4'
           }
-          onClick={handleAddTask}
+          onClick={handleSaveTask}
         >
-          Add task
+          {task ? 'Save' : 'Add task'}
         </button>
         <button
           className="text-xs font-bold text-gray-800 bg-gray-200 border border-gray-300 rounded py-2 px-4"

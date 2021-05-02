@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import TaskEditor from './../TaskEditor/TaskEditor';
 
@@ -12,7 +12,7 @@ const QuickTask = props => {
         <FaTimes size="1.5em" />
       </div>
       <div>
-        <TaskEditor />
+        <TaskEditor isQuickTask />
       </div>
     </div>
   );

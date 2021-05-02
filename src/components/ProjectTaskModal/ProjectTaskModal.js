@@ -3,17 +3,56 @@ import { FaTimes } from 'react-icons/fa';
 import CommentEditor from './../CommentEditor/CommentEditor';
 import Comment from './../Comment/Comment';
 import { useStateValue } from './../../StateProvider';
-import { BsInbox } from 'react-icons/bs';
+import { BsInbox, BsPlus } from 'react-icons/bs';
+import TaskEditor from './../TaskEditor/TaskEditor';
+import Task from './../Task/Task';
 
-const ProjectCommentModal = ({ project, match, location, history }) => {
+const ProjectTaskModal = ({ project, task, match, location, history }) => {
   const wrapperRef = useRef(null);
-  // const { url, params } = match;
-  const [selectedTab, setSelectedTab] = useState('comment');
-  const [{ comments }, dispatch] = useStateValue();
+  const { url } = match;
+  const [addTask, setAddTask] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('subtask');
+  const [editing, setEditing] = useState(false);
+  const [{ comments, tasks }, dispatch] = useStateValue();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       handleCloseCommentModal();
     }
+  };
+
+  const handleTaskDoubleClick = taskId => {
+    let pathRegex = /^\/app\/project\/(\d+)\/task\/(\d+)$/;
+    let matches = url.match(pathRegex);
+    if (matches) {
+      let new_path = url.replace(pathRegex, (match, p1, p2) => {
+        return `/app/project/${p1}/task/${taskId}`;
+      });
+      history.push(new_path);
+    } else {
+      history.push(`${url}/task/${taskId}`);
+    }
+  };
+
+  const handleStartEditing = () => {
+    setEditing(true);
+  };
+  const handleCancelEditing = () => {
+    setEditing(false);
+  };
+  const handleUpdateCompleted = () => {
+    setEditing(false);
+  };
+
+  const handleAddTask = () => {
+    setAddTask(true);
+  };
+
+  const handleCancelAddTask = () => {
+    setAddTask(false);
+  };
+
+  const handleAddTaskCompleted = () => {
+    setAddTask(false);
   };
 
   useEffect(() => {
@@ -27,16 +66,23 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
 
   const handleCloseCommentModal = () => {
     let current_path_name = location.pathname;
-    let new_path_url = current_path_name.replace('/comments', '');
+    let new_path_url = current_path_name.replace(/\/task\/\d+/, '');
     history.push(new_path_url);
   };
   const handleSwitchTab = tab => {
     setSelectedTab(tab);
   };
 
-  const current_project_comments = comments.filter(
+  const current_task_comments = comments.filter(
     comment =>
-      comment.type === 'project' && comment.subject_id === parseInt(project.id),
+      comment.type === 'task' && comment.subject_id === parseInt(task.id),
+  );
+
+  const current_task_tasks = tasks.filter(
+    current_task =>
+      current_task.project_id === project.id &&
+      current_task.parent_type === 'task' &&
+      current_task.parent_id === parseInt(task.id),
   );
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50 top-0 left-0">
@@ -59,7 +105,42 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
               </h2>
               <FaTimes size="1.5em" onClick={handleCloseCommentModal} />
             </div>
+            {!editing ? (
+              <div className="flex items-start  space-x-4">
+                <div className="h-5 w-5 border border-gray-600 rounded-full mt-1"></div>
+                <div className="flex-grow text-base text-gray-800 py-1">
+                  <div
+                    onClick={event => {
+                      if (event.detail === 2) {
+                        handleStartEditing();
+                      }
+                    }}
+                    dangerouslySetInnerHTML={{ __html: task.description }}
+                  ></div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <TaskEditor
+                  task={task}
+                  cancelled={handleCancelEditing}
+                  completed={handleUpdateCompleted}
+                />
+              </div>
+            )}
+
             <div className="flex border-b border-gray-200">
+              <div
+                className={
+                  'w-1/2 text-sm text-center py-2' +
+                  (selectedTab === 'subtask'
+                    ? ' font-bold border-b border-gray-400'
+                    : '')
+                }
+                onClick={() => handleSwitchTab('subtask')}
+              >
+                Sub-tasks
+              </div>
               <div
                 className={
                   'flex space-x-1 justify-center items-center w-1/2 text-sm py-2' +
@@ -70,9 +151,9 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
                 onClick={() => handleSwitchTab('comment')}
               >
                 <span>Comments</span>
-                {current_project_comments ? (
+                {current_task_comments ? (
                   <span className="text-xs text-gray-600 font-light">
-                    {current_project_comments.length}
+                    {current_task_comments.length}
                   </span>
                 ) : null}
               </div>
@@ -88,10 +169,58 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
                 Activity
               </div>
             </div>
+            {selectedTab === 'subtask' ? (
+              <div className="flex flex-grow flex-col overflow-y-scroll">
+                <div className="flex-grow">
+                  <div className="">
+                    {current_task_tasks.map(taskItem => {
+                      return (
+                        <Task
+                          task={{ ...taskItem }}
+                          key={`task-${taskItem.id}`}
+                          clicked={event => {
+                            if (event.detail === 2) {
+                              handleTaskDoubleClick(taskItem.id);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {!addTask ? (
+                    <div
+                      className="flex space-x-2 group py-2"
+                      onClick={handleAddTask}
+                    >
+                      <div className="flex items-center justify-center h-5 w-5 rounded-full group-hover:bg-red-500">
+                        <BsPlus
+                          size="1.2em"
+                          className="text-red-500 group-hover:text-white"
+                        />
+                      </div>
+
+                      <span className="text-sm text-gray-600 group-hover:text-red-500">
+                        Add sub-task
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="py-2">
+                      <TaskEditor
+                        type={'task'}
+                        parent={task}
+                        cancelled={handleCancelAddTask}
+                        completed={handleAddTaskCompleted}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : null}
             {selectedTab === 'comment' ? (
               <div className="flex flex-grow flex-col overflow-y-scroll">
                 <div className="flex-grow">
-                  {current_project_comments.length === 0 ? (
+                  {current_task_comments.length === 0 ? (
                     <div className="min-h-full flex flex-col items-center justify-center">
                       <div className="w-48 h-48">
                         <svg
@@ -342,7 +471,7 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
                     </div>
                   ) : (
                     <div className="py-4">
-                      {current_project_comments.map((commentItem, index) => (
+                      {current_task_comments.map((commentItem, index) => (
                         <Comment key={index} comment={commentItem} />
                       ))}
                     </div>
@@ -350,12 +479,10 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
                 </div>
 
                 <div className="">
-                  <CommentEditor type={'project'} subject={project} />
+                  <CommentEditor type={'task'} subject={task} />
                 </div>
               </div>
-            ) : (
-              <div></div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -363,4 +490,4 @@ const ProjectCommentModal = ({ project, match, location, history }) => {
   );
 };
 
-export default ProjectCommentModal;
+export default ProjectTaskModal;

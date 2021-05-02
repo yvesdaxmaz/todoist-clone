@@ -30,7 +30,7 @@ const Nav = props => {
 
   return (
     <nav>
-      <NavItem title="Inbox" counter={3}>
+      <NavItem title="Inbox" counter={3} to={`/app/project/1`}>
         <BsInbox className="text-blue-600" size="1.5em" />
       </NavItem>
       <NavItem title="Today" counter={2} isActive={true}>
