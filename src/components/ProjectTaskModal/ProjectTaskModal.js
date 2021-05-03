@@ -17,14 +17,16 @@ import { CgListTree } from 'react-icons/cg';
 import TaskEditor from './../TaskEditor/TaskEditor';
 import Task from './../Task/Task';
 import Button from './../../UI/Button/Button';
+import ProjectTaskModalOption from './ProjectTaskModalOption';
 
 const ProjectTaskModal = ({ project, task, match, location, history }) => {
   const wrapperRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
   const { url } = match;
   const [addTask, setAddTask] = useState(false);
   const [selectedTab, setSelectedTab] = useState('subtask');
   const [editing, setEditing] = useState(false);
-  const [{ comments, tasks }, dispatch] = useStateValue();
+  const [{ comments, tasks, labels }, dispatch] = useStateValue();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       handleCloseCommentModal();
@@ -42,6 +44,9 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
     } else {
       history.push(`${url}/task/${taskId}`);
     }
+  };
+  const handleShowMenu = () => {
+    setShowMenu(!showMenu);
   };
 
   const handleStartEditing = () => {
@@ -100,6 +105,22 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
     current_task =>
       current_task.id === task.parent_id && current_task.parent_type === 'task',
   );
+
+  let current_task_labels_tags = task.labels.map(id => {
+    let label = labels.find(currentLabel => currentLabel.id === id);
+    return (
+      <Button
+        texted
+        bg="gray"
+        bgOpacity="400"
+        bordered
+        to={`/app/label/${label.name}`}
+      >
+        <span className="text-xs">{label.name}</span>
+      </Button>
+    );
+  });
+
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50 top-0 left-0">
       <div className="w-full h-screen flex items-center justify-center">
@@ -142,13 +163,14 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                     }}
                     dangerouslySetInnerHTML={{ __html: task.description }}
                   ></div>
-                  <div className="mt-2">
+                  <div className="flex items-center space-x-2 mt-2">
                     <Button texted bg="gray" bgOpacity="400" bordered>
                       <div className="text-gray-500">
                         <BsCalendar />
                       </div>
                       <span className="text-xs">Schedule</span>
                     </Button>
+                    {current_task_labels_tags ? current_task_labels_tags : null}
                   </div>
                 </div>
               </div>
@@ -162,7 +184,7 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
               </div>
             )}
             <div className="py-2">
-              <div className="flex items-center justify-end space-x-2 text-gray-300">
+              <div className="relative flex items-center justify-end space-x-2 text-gray-300">
                 <Button
                   bg="gray"
                   bgOpacity="400"
@@ -191,9 +213,21 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                 <Button bg="gray" bgOpacity="400" optinText="Add reminder(s)">
                   <GiAlarmClock size="1.3em" />
                 </Button>
-                <Button bg="gray" bgOpacity="400" optinText="More task actions">
+                <Button
+                  bg="gray"
+                  bgOpacity="400"
+                  optinText="More task actions"
+                  click={handleShowMenu}
+                >
                   <BsThreeDots size="1.3em" />
                 </Button>
+                {showMenu ? (
+                  <ProjectTaskModalOption
+                    id={project.id}
+                    hide={() => setShowMenu(false)}
+                    edit={handleStartEditing}
+                  />
+                ) : null}
               </div>
             </div>
 

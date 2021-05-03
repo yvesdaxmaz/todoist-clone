@@ -22,11 +22,15 @@ import {
   DELETE_COMMENT_TO_PROJECT_CONFIRM,
   DELETE_COMMENT_TO_PROJECT_CANCEL,
   UPDATE_COMMENT_OF_PROJECT,
+  DELETE_TASK_TO_PROJECT,
+  DELETE_TASK_TO_PROJECT_CONFIRM,
+  DELETE_TASK_TO_PROJECT_CANCEL,
 } from './actionTypes';
 const reducer = (state, action) => {
   let { projects, comments, tasks } = state;
   let project,
     comment,
+    task,
     last_project = null;
   switch (action.type) {
     case SHOW_ADD_PROJECT_MODAL:
@@ -197,6 +201,27 @@ const reducer = (state, action) => {
         ...state,
         comments,
       };
+
+    case DELETE_TASK_TO_PROJECT:
+      task = tasks.find(current_task => current_task.id === action.task_id);
+      return {
+        ...state,
+        delete_task: task,
+      };
+
+    case DELETE_TASK_TO_PROJECT_CONFIRM:
+      return {
+        ...state,
+        tasks: state.tasks.filter(task => {
+          return (
+            task.id !== state.delete_task.id ||
+            (task.parent_type === 'task' && task.parent_id !== task.id)
+          );
+        }),
+        delete_task: false,
+      };
+    case DELETE_TASK_TO_PROJECT_CANCEL:
+      return { ...state, delete_task: false };
 
     default:
       return state;

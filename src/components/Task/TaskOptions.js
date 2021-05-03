@@ -15,13 +15,23 @@ import { GiAlarmClock, GiSofa } from 'react-icons/gi';
 import { CgCalendarNext } from 'react-icons/cg';
 import { BiLink, BiRightArrowCircle, BiDuplicate } from 'react-icons/bi';
 import Button from './../../UI/Button/Button';
+import { useStateValue } from './../../StateProvider';
+import { DELETE_TASK_TO_PROJECT } from './../../actionTypes';
 
-const TaskOptions = ({ hide }) => {
+const TaskOptions = ({ hide, edit, id }) => {
   const wrapperRef = useRef(null);
+  const [state, dispatch] = useStateValue();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       hide();
     }
+  };
+  const handleDeleteTask = () => {
+    dispatch({
+      type: DELETE_TASK_TO_PROJECT,
+      task_id: id,
+    });
+    hide();
   };
 
   useEffect(() => {
@@ -57,7 +67,13 @@ const TaskOptions = ({ hide }) => {
               Add task below
             </span>
           </div>
-          <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400">
+          <div
+            className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400"
+            onClick={() => {
+              edit();
+              hide();
+            }}
+          >
             <span className="relative flex items-center justify-center h-8 w-8">
               <RiEdit2Fill size="1.5em" />
             </span>
@@ -200,7 +216,10 @@ const TaskOptions = ({ hide }) => {
           </div>
         </div>
         <div className="py-1 border-b border-gray-200">
-          <div className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400">
+          <div
+            className="flex items-center space-x-4 h-8  hover:bg-gray-100 text-gray-400"
+            onClick={handleDeleteTask}
+          >
             <span className="relative flex items-center justify-center h-8 w-8">
               <BsTrash size="1.5em" />
             </span>

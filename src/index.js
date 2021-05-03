@@ -11,6 +11,7 @@ let initialState = {
   editProject: false,
   delete_project: false,
   delete_comment: false,
+  delete_task: false,
   quickTask: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },

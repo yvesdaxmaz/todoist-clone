@@ -131,7 +131,13 @@ const Task = ({ task, clicked }) => {
           completed={handleUpdateCompleted}
         />
       )}
-      {showMenu ? <TaskOptions hide={() => setShowMenu(false)} /> : null}
+      {showMenu ? (
+        <TaskOptions
+          id={task.id}
+          hide={() => setShowMenu(false)}
+          edit={() => setEditing(true)}
+        />
+      ) : null}
     </div>
   );
 };

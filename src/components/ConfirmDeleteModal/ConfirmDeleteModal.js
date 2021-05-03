@@ -5,14 +5,21 @@ import {
   DELETE_PROJECT_CONFIRM,
   DELETE_COMMENT_TO_PROJECT_CANCEL,
   DELETE_COMMENT_TO_PROJECT_CONFIRM,
+  DELETE_TASK_TO_PROJECT_CANCEL,
+  DELETE_TASK_TO_PROJECT_CONFIRM,
 } from './../../actionTypes';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory, useRouteMatch, useLocation } from 'react-router';
 
 const ConfirmDeleteModal = props => {
   const wrapperRef = useRef(null);
-  const [{ delete_project, delete_comment }, dispatch] = useStateValue();
+  let total_deleted_tasks = null;
+  const [
+    { delete_project, delete_comment, delete_task, tasks },
+    dispatch,
+  ] = useStateValue();
   let history = useHistory();
+  let location = useLocation();
   let { url } = useRouteMatch();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -24,6 +31,11 @@ const ConfirmDeleteModal = props => {
       if (delete_comment) {
         dispatch({
           type: DELETE_COMMENT_TO_PROJECT_CANCEL,
+        });
+      }
+      if (delete_task) {
+        dispatch({
+          type: DELETE_TASK_TO_PROJECT_CANCEL,
         });
       }
     }
@@ -40,6 +52,12 @@ const ConfirmDeleteModal = props => {
         type: DELETE_COMMENT_TO_PROJECT_CANCEL,
       });
     }
+
+    if (delete_task) {
+      dispatch({
+        type: DELETE_TASK_TO_PROJECT_CANCEL,
+      });
+    }
   };
 
   const handleConfirmDelete = () => {
@@ -53,9 +71,25 @@ const ConfirmDeleteModal = props => {
       dispatch({
         type: DELETE_COMMENT_TO_PROJECT_CONFIRM,
       });
-      history.push(url);
+      history.push(location.pathname);
+    }
+
+    if (delete_task) {
+      dispatch({
+        type: DELETE_TASK_TO_PROJECT_CONFIRM,
+      });
+      history.push(location.pathname);
     }
   };
+  if (delete_task) {
+    total_deleted_tasks = tasks.filter(current_task => {
+      return (
+        current_task.id === delete_task.id ||
+        (current_task.parent_type === 'task' &&
+          current_task.parent_id === delete_task.id)
+      );
+    });
+  }
 
   useEffect(() => {
     window.addEventListener('mousedown', handleMouseDown);
@@ -79,6 +113,10 @@ const ConfirmDeleteModal = props => {
                   {delete_project ? (
                     <span className="text-gray-800 font-bold">
                       {` ${delete_project.name}?`}
+                    </span>
+                  ) : delete_task ? (
+                    <span className="font-bold">
+                      {total_deleted_tasks.length} tasks?
                     </span>
                   ) : (
                     <>{` this?`}</>

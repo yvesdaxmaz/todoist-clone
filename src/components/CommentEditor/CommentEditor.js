@@ -17,6 +17,9 @@ const CommentEditor = ({ type, subject }) => {
   };
 
   const handleSaveComment = () => {
+    if (comment === '') {
+      return false;
+    }
     dispatch({
       type: ADD_COMMENT_TO_PROJECT,
       comment: {
