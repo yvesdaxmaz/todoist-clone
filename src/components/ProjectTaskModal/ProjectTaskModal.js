@@ -3,9 +3,20 @@ import { FaTimes } from 'react-icons/fa';
 import CommentEditor from './../CommentEditor/CommentEditor';
 import Comment from './../Comment/Comment';
 import { useStateValue } from './../../StateProvider';
-import { BsInbox, BsPlus } from 'react-icons/bs';
+import {
+  BsCalendar,
+  BsInbox,
+  BsFlag,
+  BsPlus,
+  BsListTask,
+  BsThreeDots,
+} from 'react-icons/bs';
+import { GiAlarmClock } from 'react-icons/gi';
+import { IoMdPricetag } from 'react-icons/io';
+import { CgListTree } from 'react-icons/cg';
 import TaskEditor from './../TaskEditor/TaskEditor';
 import Task from './../Task/Task';
+import Button from './../../UI/Button/Button';
 
 const ProjectTaskModal = ({ project, task, match, location, history }) => {
   const wrapperRef = useRef(null);
@@ -84,6 +95,11 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
       current_task.parent_type === 'task' &&
       current_task.parent_id === parseInt(task.id),
   );
+
+  const current_task_parent = tasks.find(
+    current_task =>
+      current_task.id === task.parent_id && current_task.parent_type === 'task',
+  );
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50 top-0 left-0">
       <div className="w-full h-screen flex items-center justify-center">
@@ -94,14 +110,23 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
           >
             <div className="flex items-center justify-between py-2">
               <h2 className="flex items-center space-x-2 text-sm text-gray-800">
-                {project.name === 'Index' ? (
-                  <BsInbox className="text-blue-600" size="1.5em" />
+                {current_task_parent ? (
+                  <>
+                    <CgListTree size="1.5em" />
+                    <span>{current_task_parent.description}</span>
+                  </>
                 ) : (
-                  <div
-                    className={`h-2 w-2 rounded-full ${project.color}`}
-                  ></div>
+                  <>
+                    {project.name === 'Index' ? (
+                      <BsInbox className="text-blue-600" size="1.5em" />
+                    ) : (
+                      <div
+                        className={`h-2 w-2 rounded-full ${project.color}`}
+                      ></div>
+                    )}
+                    <span>{project.name}</span>
+                  </>
                 )}
-                <span>{project.name}</span>
               </h2>
               <FaTimes size="1.5em" onClick={handleCloseCommentModal} />
             </div>
@@ -117,6 +142,14 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                     }}
                     dangerouslySetInnerHTML={{ __html: task.description }}
                   ></div>
+                  <div className="mt-2">
+                    <Button texted bg="gray" bgOpacity="400" bordered>
+                      <div className="text-gray-500">
+                        <BsCalendar />
+                      </div>
+                      <span className="text-xs">Schedule</span>
+                    </Button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -128,6 +161,41 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                 />
               </div>
             )}
+            <div className="py-2">
+              <div className="flex items-center justify-end space-x-2 text-gray-300">
+                <Button
+                  bg="gray"
+                  bgOpacity="400"
+                  optinText="Select a project"
+                  shortcutKey="#"
+                  click={handleStartEditing}
+                >
+                  <BsListTask size="1.3em" className="text-gray-400" />
+                </Button>
+                <Button
+                  bg="gray"
+                  bgOpacity="400"
+                  shortcutKey="@"
+                  optinText="Add label"
+                >
+                  <IoMdPricetag size="1.3em" className="text-gray-400" />
+                </Button>
+                <Button
+                  bg="gray"
+                  bgOpacity="400"
+                  shortcutKey="p1"
+                  optinText="Set the priority"
+                >
+                  <BsFlag size="1.3em" className="text-gray-400" />
+                </Button>
+                <Button bg="gray" bgOpacity="400" optinText="Add reminder(s)">
+                  <GiAlarmClock size="1.3em" />
+                </Button>
+                <Button bg="gray" bgOpacity="400" optinText="More task actions">
+                  <BsThreeDots size="1.3em" />
+                </Button>
+              </div>
+            </div>
 
             <div className="flex border-b border-gray-200">
               <div

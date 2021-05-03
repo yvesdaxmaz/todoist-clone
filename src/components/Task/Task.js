@@ -3,16 +3,22 @@ import { BsCalendar, BsThreeDots } from 'react-icons/bs';
 import { GrDrag } from 'react-icons/gr';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { GoComment } from 'react-icons/go';
+import { CgListTree } from 'react-icons/cg';
 import Button from './../../UI/Button/Button';
 import TaskEditor from './../TaskEditor/TaskEditor';
 import { Link } from 'react-router-dom';
 import { useStateValue } from './../../StateProvider';
+import TaskOptions from './TaskOptions';
 
 const Task = ({ task, clicked }) => {
   const [editing, setEditing] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [{ labels, comments }, dispatch] = useStateValue();
+  const [showMenu, setShowMenu] = useState(false);
+  const [{ labels, comments, tasks }, dispatch] = useStateValue();
 
+  const handleShowMenu = () => {
+    setShowMenu(!showMenu);
+  };
   const handleStartEditing = () => {
     setEditing(true);
   };
@@ -42,8 +48,12 @@ const Task = ({ task, clicked }) => {
       comment.type === 'task' && comment.subject_id === parseInt(task.id),
   );
 
+  const current_task_subtasks = tasks.filter(
+    current_task => current_task.parent_id === task.id,
+  );
+
   return (
-    <>
+    <div className="relative">
       {!editing ? (
         <div
           className="relative flex items-start space-x-4 py-2 border-b border-gray-100"
@@ -55,6 +65,14 @@ const Task = ({ task, clicked }) => {
           <div className="flex-grow text-sm text-gray-800 py-1">
             <div dangerouslySetInnerHTML={{ __html: task.description }}></div>
             <div className="flex items-center space-x-1 mt-2">
+              {current_task_subtasks.length > 0 ? (
+                <div className="flex items-center space-x-1">
+                  <CgListTree size="0.8em" />
+                  <span className="text-xs text-gray-600">
+                    {current_task_subtasks.length}
+                  </span>
+                </div>
+              ) : null}
               {current_task_comments.length > 0 ? (
                 <div className="flex items-center space-x-1">
                   <GoComment size="0.8em" />
@@ -91,6 +109,7 @@ const Task = ({ task, clicked }) => {
                 bg="gray"
                 bgOpacity="400"
                 optinText="More project actions"
+                click={handleShowMenu}
               >
                 <BsThreeDots size="1.3em" />
               </Button>
@@ -106,15 +125,14 @@ const Task = ({ task, clicked }) => {
           </div>
         </div>
       ) : (
-        <div>
-          <TaskEditor
-            task={task}
-            cancelled={handleCancelEditing}
-            completed={handleUpdateCompleted}
-          />
-        </div>
+        <TaskEditor
+          task={task}
+          cancelled={handleCancelEditing}
+          completed={handleUpdateCompleted}
+        />
       )}
-    </>
+      {showMenu ? <TaskOptions hide={() => setShowMenu(false)} /> : null}
+    </div>
   );
 };
 export default Task;
