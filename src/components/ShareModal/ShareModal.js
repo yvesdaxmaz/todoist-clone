@@ -8,7 +8,6 @@ import {
   BsInbox,
   BsFlag,
   BsPlus,
-  BsCheck,
   BsListTask,
   BsThreeDots,
 } from 'react-icons/bs';
@@ -19,75 +18,18 @@ import TaskEditor from './../TaskEditor/TaskEditor';
 import Task from './../Task/Task';
 import Button from './../../UI/Button/Button';
 import ProjectTaskModalOption from './ProjectTaskModalOption';
-import {
-  MARK_TASK_AS_COMPLETED,
-  MARK_TASK_AS_UNCOMPLETED,
-} from './../../actionTypes';
 
-const ProjectTaskModal = ({ project, task, match, location, history }) => {
+const ShareModal = ({ project, match, location, history }) => {
   const wrapperRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false);
   const { url } = match;
   const [addTask, setAddTask] = useState(false);
   const [selectedTab, setSelectedTab] = useState('subtask');
   const [editing, setEditing] = useState(false);
-  const [hideCompleted, setHideCompleted] = useState(true);
-  const [{ comments, tasks, labels }, dispatch] = useStateValue();
   const handleMouseDown = event => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      handleCloseCommentModal();
+      handleCloseShareModal();
     }
-  };
-  const handleCompletedTask = () => {
-    dispatch({
-      type: MARK_TASK_AS_COMPLETED,
-      task_id: task.id,
-    });
-  };
-
-  const handleUncompletedTask = () => {
-    dispatch({
-      type: MARK_TASK_AS_UNCOMPLETED,
-      task_id: task.id,
-    });
-  };
-
-  const handleTaskDoubleClick = taskId => {
-    let pathRegex = /^\/app\/project\/(\d+)\/task\/(\d+)$/;
-    let matches = url.match(pathRegex);
-    if (matches) {
-      let new_path = url.replace(pathRegex, (match, p1, p2) => {
-        return `/app/project/${p1}/task/${taskId}`;
-      });
-      history.push(new_path);
-    } else {
-      history.push(`${url}/task/${taskId}`);
-    }
-  };
-  const handleShowMenu = () => {
-    setShowMenu(!showMenu);
-  };
-
-  const handleStartEditing = () => {
-    setEditing(true);
-  };
-  const handleCancelEditing = () => {
-    setEditing(false);
-  };
-  const handleUpdateCompleted = () => {
-    setEditing(false);
-  };
-
-  const handleAddTask = () => {
-    setAddTask(true);
-  };
-
-  const handleCancelAddTask = () => {
-    setAddTask(false);
-  };
-
-  const handleAddTaskCompleted = () => {
-    setAddTask(false);
   };
 
   useEffect(() => {
@@ -97,61 +39,7 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
     };
   }, []);
 
-  const handleHideCompletedTask = () => {
-    setHideCompleted(!hideCompleted);
-  };
-
-  const handleCloseCommentModal = () => {
-    let current_path_name = location.pathname;
-    let new_path_url = current_path_name.replace(/\/task\/\d+/, '');
-    history.push(new_path_url);
-  };
-  const handleSwitchTab = tab => {
-    setSelectedTab(tab);
-  };
-
-  const current_task_comments = comments.filter(
-    comment =>
-      comment.type === 'task' && comment.subject_id === parseInt(task.id),
-  );
-
-  const current_task_uncompleted_tasks = tasks.filter(current_task => {
-    return (
-      current_task.project_id === project.id &&
-      current_task.parent_type === 'task' &&
-      current_task.parent_id === parseInt(task.id) &&
-      !current_task.completed
-    );
-  });
-
-  const current_task_completed_tasks = tasks.filter(current_task => {
-    return (
-      current_task.project_id === project.id &&
-      current_task.parent_type === 'task' &&
-      current_task.parent_id === parseInt(task.id) &&
-      current_task.completed
-    );
-  });
-
-  const current_task_parent = tasks.find(
-    current_task =>
-      current_task.id === task.parent_id && current_task.parent_type === 'task',
-  );
-
-  let current_task_labels_tags = task.labels.map(id => {
-    let label = labels.find(currentLabel => currentLabel.id === id);
-    return (
-      <Button
-        texted
-        bg="gray"
-        bgOpacity="400"
-        bordered
-        to={`/app/label/${label.name}`}
-      >
-        <span className="text-xs">{label.name}</span>
-      </Button>
-    );
-  });
+  const handleCloseShareModal = () => {};
 
   return (
     <div className="fixed h-screen w-full bg-gray-800 bg-opacity-50 top-0 left-0">
@@ -163,46 +51,13 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
           >
             <div className="flex items-center justify-between py-2">
               <h2 className="flex items-center space-x-2 text-sm text-gray-800">
-                {current_task_parent ? (
-                  <>
-                    <CgListTree size="1.5em" />
-                    <span>{current_task_parent.description}</span>
-                  </>
-                ) : (
-                  <>
-                    {project.name === 'Index' ? (
-                      <BsInbox className="text-blue-600" size="1.5em" />
-                    ) : (
-                      <div
-                        className={`h-2 w-2 rounded-full ${project.color}`}
-                      ></div>
-                    )}
-                    <span>{project.name}</span>
-                  </>
-                )}
+                Share options
               </h2>
-              <FaTimes size="1.5em" onClick={handleCloseCommentModal} />
+              <FaTimes size="1.5em" onClick={handleCloseShareModal} />
             </div>
             {!editing ? (
               <div className="flex items-start  space-x-4">
-                <div
-                  className={
-                    'flex items-center justify-center h-5 w-5 border border-gray-600 rounded-full group ' +
-                    (task.completed ? 'bg-gray-600' : 'hover:bg-gray-200')
-                  }
-                  onClick={
-                    !task.completed
-                      ? handleCompletedTask
-                      : handleUncompletedTask
-                  }
-                >
-                  <BsCheck
-                    size="0.8em"
-                    className={
-                      task.completed ? 'text-white' : 'hidden group-hover:block'
-                    }
-                  />
-                </div>
+                <div className="h-5 w-5 border border-gray-600 rounded-full mt-1"></div>
                 <div className="flex-grow text-base text-gray-800 py-1">
                   <div
                     onClick={event => {
@@ -211,11 +66,7 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                       }
                     }}
                     dangerouslySetInnerHTML={{ __html: task.description }}
-                    className={
-                      task.completed ? 'line-through text-gray-600' : ''
-                    }
                   ></div>
-
                   <div className="flex items-center space-x-2 mt-2">
                     <Button texted bg="gray" bgOpacity="400" bordered>
                       <div className="text-gray-500">
@@ -276,9 +127,7 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                 </Button>
                 {showMenu ? (
                   <ProjectTaskModalOption
-                    hideCompleted={hideCompleted}
-                    hideCompletedhandler={handleHideCompletedTask}
-                    id={task.id}
+                    id={project.id}
                     hide={() => setShowMenu(false)}
                     edit={handleStartEditing}
                   />
@@ -330,7 +179,7 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
               <div className="flex flex-grow flex-col overflow-y-scroll">
                 <div className="flex-grow">
                   <div className="">
-                    {current_task_uncompleted_tasks.map(taskItem => {
+                    {current_task_tasks.map(taskItem => {
                       return (
                         <Task
                           task={{ ...taskItem }}
@@ -371,25 +220,6 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
                       />
                     </div>
                   )}
-                  {hideCompleted ? (
-                    <>
-                      <div className="">
-                        {current_task_completed_tasks.map(current_task => {
-                          return (
-                            <Task
-                              task={{ ...current_task }}
-                              key={`task-${current_task.id}`}
-                              clicked={event => {
-                                if (event.detail === 2) {
-                                  handleTaskDoubleClick(current_task.id);
-                                }
-                              }}
-                            />
-                          );
-                        })}
-                      </div>
-                    </>
-                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -666,4 +496,4 @@ const ProjectTaskModal = ({ project, task, match, location, history }) => {
   );
 };
 
-export default ProjectTaskModal;
+export default ShareModal;

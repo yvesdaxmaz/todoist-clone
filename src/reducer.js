@@ -25,8 +25,11 @@ import {
   DELETE_TASK_TO_PROJECT,
   DELETE_TASK_TO_PROJECT_CONFIRM,
   DELETE_TASK_TO_PROJECT_CANCEL,
+  MARK_TASK_AS_COMPLETED,
+  MARK_TASK_AS_UNCOMPLETED,
 } from './actionTypes';
 const reducer = (state, action) => {
+  console.log(action);
   let { projects, comments, tasks } = state;
   let project,
     comment,
@@ -204,6 +207,7 @@ const reducer = (state, action) => {
 
     case DELETE_TASK_TO_PROJECT:
       task = tasks.find(current_task => current_task.id === action.task_id);
+      console.log(task);
       return {
         ...state,
         delete_task: task,
@@ -214,14 +218,45 @@ const reducer = (state, action) => {
         ...state,
         tasks: state.tasks.filter(task => {
           return (
-            task.id !== state.delete_task.id ||
-            (task.parent_type === 'task' && task.parent_id !== task.id)
+            (task.parent_type === 'task' &&
+              task.parent_id !== state.delete_task.id) ||
+            task.id !== state.delete_task.id
           );
         }),
         delete_task: false,
       };
     case DELETE_TASK_TO_PROJECT_CANCEL:
       return { ...state, delete_task: false };
+
+    case MARK_TASK_AS_COMPLETED:
+      return {
+        ...state,
+        tasks: tasks.map(task => {
+          if (
+            task.id === action.task_id ||
+            (task.parent_type === 'task' && task.parent_id === action.task_id)
+          ) {
+            return { ...task, completed: true };
+          } else {
+            return task;
+          }
+        }),
+      };
+
+    case MARK_TASK_AS_UNCOMPLETED:
+      return {
+        ...state,
+        tasks: tasks.map(task => {
+          if (
+            task.id === action.task_id ||
+            (task.parent_type === 'task' && task.parent_id === action.task_id)
+          ) {
+            return { ...task, completed: false };
+          } else {
+            return task;
+          }
+        }),
+      };
 
     default:
       return state;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BsCalendar, BsThreeDots } from 'react-icons/bs';
+import { BsCheck, BsCalendar, BsThreeDots } from 'react-icons/bs';
 import { GrDrag } from 'react-icons/gr';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { GoComment } from 'react-icons/go';
@@ -9,6 +9,10 @@ import TaskEditor from './../TaskEditor/TaskEditor';
 import { Link } from 'react-router-dom';
 import { useStateValue } from './../../StateProvider';
 import TaskOptions from './TaskOptions';
+import {
+  MARK_TASK_AS_COMPLETED,
+  MARK_TASK_AS_UNCOMPLETED,
+} from './../../actionTypes';
 
 const Task = ({ task, clicked }) => {
   const [editing, setEditing] = useState(false);
@@ -27,6 +31,20 @@ const Task = ({ task, clicked }) => {
   };
   const handleUpdateCompleted = () => {
     setEditing(false);
+  };
+
+  const handleCompletedTask = () => {
+    dispatch({
+      type: MARK_TASK_AS_COMPLETED,
+      task_id: task.id,
+    });
+  };
+
+  const handleUncompletedTask = () => {
+    dispatch({
+      type: MARK_TASK_AS_UNCOMPLETED,
+      task_id: task.id,
+    });
   };
 
   let attachedLabelsTags = task.labels.map(id => {
@@ -61,9 +79,27 @@ const Task = ({ task, clicked }) => {
           onMouseLeave={() => setHovered(false)}
           onClick={clicked}
         >
-          <div className="h-5 w-5 border border-gray-600 rounded-full"></div>
+          <div
+            className={
+              'flex items-center justify-center h-5 w-5 border border-gray-600 rounded-full group ' +
+              (task.completed ? 'bg-gray-600' : 'hover:bg-gray-200')
+            }
+            onClick={
+              !task.completed ? handleCompletedTask : handleUncompletedTask
+            }
+          >
+            <BsCheck
+              size="0.8em"
+              className={
+                task.completed ? 'text-white' : 'hidden group-hover:block'
+              }
+            />
+          </div>
           <div className="flex-grow text-sm text-gray-800 py-1">
-            <div dangerouslySetInnerHTML={{ __html: task.description }}></div>
+            <div
+              dangerouslySetInnerHTML={{ __html: task.description }}
+              className={task.completed ? 'line-through text-gray-600' : ''}
+            ></div>
             <div className="flex items-center space-x-1 mt-2">
               {current_task_subtasks.length > 0 ? (
                 <div className="flex items-center space-x-1">
@@ -90,21 +126,25 @@ const Task = ({ task, clicked }) => {
           </div>
           {hovered ? (
             <div className="flex items-center space-x-2 text-gray-300">
-              <Button
-                bg="gray"
-                bgOpacity="400"
-                optinText="Edit"
-                shortcutKey="Alt"
-                click={handleStartEditing}
-              >
-                <RiEdit2Fill size="1.3em" className="text-gray-400" />
-              </Button>
-              <Button bg="gray" bgOpacity="400" optinText="Schedule">
-                <BsCalendar size="1.3em" className="text-gray-400" />
-              </Button>
-              <Button bg="gray" bgOpacity="400" optinText="Comment">
-                <GoComment size="1.3em" className="text-gray-400" />
-              </Button>
+              {!task.completed ? (
+                <>
+                  <Button
+                    bg="gray"
+                    bgOpacity="400"
+                    optinText="Edit"
+                    shortcutKey="Alt"
+                    click={handleStartEditing}
+                  >
+                    <RiEdit2Fill size="1.3em" className="text-gray-400" />
+                  </Button>
+                  <Button bg="gray" bgOpacity="400" optinText="Schedule">
+                    <BsCalendar size="1.3em" className="text-gray-400" />
+                  </Button>
+                  <Button bg="gray" bgOpacity="400" optinText="Comment">
+                    <GoComment size="1.3em" className="text-gray-400" />
+                  </Button>
+                </>
+              ) : null}
               <Button
                 bg="gray"
                 bgOpacity="400"
@@ -134,6 +174,7 @@ const Task = ({ task, clicked }) => {
       {showMenu ? (
         <TaskOptions
           id={task.id}
+          completed={task.completed}
           hide={() => setShowMenu(false)}
           edit={() => setEditing(true)}
         />
