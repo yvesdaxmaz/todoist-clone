@@ -13,6 +13,7 @@ let initialState = {
   delete_comment: false,
   delete_task: false,
   quickTask: false,
+  shared_project: false,
   labels: [
     { id: 1, name: 'social', bg: 'text-yellow-500', counter: 1 },
     { id: 2, name: 'urgent', bg: 'text-blue-300', counter: 2 },
@@ -91,6 +92,7 @@ let initialState = {
       createdAt: new Date(),
     },
   ],
+  collaborators: [],
 };
 
 ReactDOM.render(

@@ -11,6 +11,8 @@ import ProjectTaskModal from './../ProjectTaskModal/ProjectTaskModal';
 import TaskEditor from './../TaskEditor/TaskEditor';
 import { useStateValue } from './../../StateProvider';
 import ProjectOptions from './ProjectOptions';
+import ProjectShareModal from './../ProjectShareModal/ProjectShareModal';
+import { SHOW_PROJECT_SHARE_MODAL } from './../../actionTypes';
 
 const Project = ({ project, tasks }) => {
   const [addTask, setAddTask] = useState(false);
@@ -50,6 +52,12 @@ const Project = ({ project, tasks }) => {
   const handleHideCompletedTasks = () => {
     setShowCompletedTasks(false);
   };
+  const handleDisplayShareModal = () => {
+    dispatch({
+      type: SHOW_PROJECT_SHARE_MODAL,
+      project,
+    });
+  };
 
   const completed_tasks = tasks.filter(current_task => current_task.completed);
   const uncompleted_tasks = tasks.filter(
@@ -74,13 +82,18 @@ const Project = ({ project, tasks }) => {
               <GoComment />
               <span className="text-sm">Comments</span>
             </Button>
-            <Button texted bg="gray" bgOpacity="400">
+            <Button
+              texted
+              bg="gray"
+              bgOpacity="400"
+              click={handleDisplayShareModal}
+            >
               <BiUserPlus />
               <span className="text-sm">Share</span>
             </Button>
             <Button texted bg="gray" bgOpacity="400">
               <BsArrowUpDown />
-              <span className="text-sm">Share</span>
+              <span className="text-sm">Sort</span>
             </Button>
             <Button
               bg="gray"
@@ -206,6 +219,8 @@ const Project = ({ project, tasks }) => {
           }
         }}
       />
+
+      {state.shared_project ? <ProjectShareModal project={project} /> : null}
     </div>
   );
 };

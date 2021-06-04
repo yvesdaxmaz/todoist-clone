@@ -27,10 +27,14 @@ import {
   DELETE_TASK_TO_PROJECT_CANCEL,
   MARK_TASK_AS_COMPLETED,
   MARK_TASK_AS_UNCOMPLETED,
+  SHOW_PROJECT_SHARE_MODAL,
+  HIDE_PROJECT_SHARE_MODAL,
+  ADD_COLLABORATOR_TO_PROJECT,
+  DELETE_COLLABORATOR_TO_PROJECT,
 } from './actionTypes';
 const reducer = (state, action) => {
   console.log(action);
-  let { projects, comments, tasks } = state;
+  let { projects, comments, tasks, collaborators } = state;
   let project,
     comment,
     task,
@@ -169,7 +173,6 @@ const reducer = (state, action) => {
           },
         ],
       };
-
     case DELETE_COMMENT_TO_PROJECT:
       comment = comments.find(
         current_comment => current_comment.id === action.comment_id,
@@ -255,6 +258,32 @@ const reducer = (state, action) => {
           } else {
             return task;
           }
+        }),
+      };
+    case SHOW_PROJECT_SHARE_MODAL:
+      return { ...state, shared_project: action.project };
+    case HIDE_PROJECT_SHARE_MODAL:
+      return { ...state, shared_project: null };
+
+    case ADD_COLLABORATOR_TO_PROJECT:
+      let last_collaborator = collaborators[collaborators.length - 1];
+
+      return {
+        ...state,
+        collaborators: [
+          ...state.collaborators,
+          {
+            id: last_collaborator ? parseInt(last_collaborator.id) + 1 : 1,
+            ...action.collaborator,
+          },
+        ],
+      };
+
+    case DELETE_COLLABORATOR_TO_PROJECT:
+      return {
+        ...state,
+        collaborators: [...state.collaborators].filter(collaborator => {
+          return action.collaborator_id !== collaborator.id;
         }),
       };
 
